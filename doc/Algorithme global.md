@@ -3,77 +3,76 @@ Panic Station
 
 Algorithme global
 
-      Première partie : mise en place
+      PremiÃ¨re partieÂ : mise en place
 
-		Plateau de jeu
+    Plateau de jeu
 
-* On place la salle Réacteur
-* On mélange les autres cartes lieux, sauf le Nid et le Terminal
-* On insère au hasard le Terminal dans la deuxième moitié grossière de la pile de cartes lieux
-* On insère au hasard le Nid parmi les trois dernières cartes lieux
+* On place la salle RÃ©acteur
+* On mÃ©lange les autres cartes lieux, sauf le Nid et le Terminal
+* On insÃ¨re au hasard le Terminal dans la deuxiÃ¨me moitiÃ© grossiÃ¨re de la pile de cartes lieux
+* On insÃ¨re au hasard le Nid parmi les trois derniÃ¨res cartes lieux
 
 Cartes objets
-* On isole la carte Hôte et J cartes Jerricans
-* On mélange les autres cartes objets
-* On ajoute les 2J-1 premières cartes objets au tas contenant l’Hôte et les Jerricans
-* On mélange ce tas
+* On isole la carte HÃ´te et J cartes Jerricans
+* On mÃ©lange les autres cartes objets
+* On ajoute les 2J-1 premiÃ¨res cartes objets au tas contenant lÂ’HÃ´te et les Jerricans
+* On mÃ©lange ce tas
 * On le place sur la pioche des cartes objets
 
 Joueurs
 
-* On détermine le nombre J de joueurs
-* On associe à chaque joueur une couleur, un nom et un ordre de jeu
+* On dÃ©termine le nombre J de joueurs
+* On associe Ã  chaque joueur une couleur, un nom et un ordre de jeu
 * Tous les personnages obtiennent 4 points de vie
-* Tous les androïdes obtiennent un pistolet
+* Tous les androÃ¯des obtiennent un pistolet
 * Tous les soldats obtiennent un lance-flammes
 * Chaque joueur pioche deux cartes
-* Tant qu’un joueur possède une carte Parasite, on place un Parasite sur la salle de Départ, on défausse la carte Parasite et le joueur pioche une carte objet
-* Le premier joueur prend le marqueur Phase des Parasites désactivé
+* Tant quÂ’un joueur possÃ¨de une carte Parasite, on place un Parasite sur la salle de DÃ©part, on dÃ©fausse la carte Parasite et le joueur pioche une carte objet
+* Le premier joueur prend le marqueur Phase des Parasites dÃ©sactivÃ©
 
-      Deuxième partie : jeu
-      
-      	En boucle :
-      
-* Si le joueur en cours a le marqueur Phase des Parasites et qu’il est activé, on effectue la Phase des Parasites :
-- On décale le marqueur Phase des Parasites au joueur suivant et on le désactive
-- Toutes les portes sont fermées
-- On lance 1D4 et on déplace tous les parasites selon la direction indiquée, selon les déplacements autorisés
-- Pour chaque joueur touché :
-> Si le joueur possède un gilet pare-balles et au moins 6 cartes, on lui demande s’il veut l’utiliser pour chacun de ses personnages.
-* Si ses deux personnages sont dans la même pièce, on demande s’il veut l’utiliser pour les deux personnages
-> Chaque personnage touché perd 1 PV ou 2 PV selon la couleur du Parasite
-> On enlève du plateau les personnages morts
-* Si un joueur a perdu ses deux personnages, il est éliminé de la partie. S’il possédait le marqueur Phase des Parasites, il est décalé au joueur suivant, en gardant son statut
-> Si les conditions de fin de partie sont réalisées, on sort de toutes les boucles
-* Si le joueur en cours a le marqueur Phase des Parasites et qu’il est désactivé, on l’active
-* On détermine le nombre PA de points d’action du joueur en cours
-* Tant que le joueur possède au moins 1 PA :
-- On affiche les actions possibles pour ce joueur :
-> Si le joueur possède au moins 6 cartes et qu’il possède une carte jouable, afficher « Utiliser une carte »
-> Si un personnage du joueur est dans une salle qui peut être fouillée, afficher « Fouiller une pièce »
-> Si un personnage du joueur est dans une salle contenant un personnage d’un autre joueur ou un parasite, et que son personnage peut attaquer, afficher « Attaquer »
-> Si un personnage du joueur est dans une salle Terminal et qu’il ne l’a pas encore activé, afficher « Activer le Terminal »
-> Si un personnage du joueur est dans une salle Infirmerie et qu’il ne l’a pas encore activée, afficher « Se soigner à l’Infirmerie »
-> Si le soldat du joueur est au Nid et que le joueur possède trois Jerricans, afficher « Brûler le Nid »
-> Si un personnage du joueur est dans une salle qui permet de placer la première carte du tas, ou que celle-ci ne peut être placer nulle part, afficher « Explorer »
-> Si un personnage du joueur est dans une salle qui permet de se déplacer dans une autre salle, afficher « Se déplacer »
->  S’il choisit « Utiliser une carte » :
-* On déterminer les cartes utilisables…….
+      DeuxiÃ¨me partieÂ : jeu
 
-- S’il choisit « Fouiller une pièce » :
-> Si les deux personnages ne sont pas dans la même pièce, choisir une pièce
-> Si la pièce a déjà été fouillée, faire apparaître un Parasite à l’aide du 1D4. Sinon, indiquer qu’elle a été fouillée
-> Si la pièce permet la Fouille en équipe, demander au joueur s’il veut en profiter, et si oui, avec quel autre joueur
-* Distribuer une carte à chacun des deux joueurs
-* Pour chaque carte Parasite tirée, placer un Parasite à l’aide du 1D4 et défausser la carte
-> Si la pièce est un entrepôt :
+        En boucleÂ :
+
+* Si le joueur en cours a le marqueur Phase des Parasites et quÂ’il est activÃ©, on effectue la Phase des ParasitesÂ :
+- On dÃ©cale le marqueur Phase des Parasites au joueur suivant et on le dÃ©sactive
+- Toutes les portes sont fermÃ©es
+- On lance 1D4 et on dÃ©place tous les parasites selon la direction indiquÃ©e, selon les dÃ©placements autorisÃ©s
+- Pour chaque joueurÂ touchÃ© :
+> Si le joueur possÃ¨de un gilet pare-balles et au moins 6 cartes, on lui demande sÂ’il veut lÂ’utiliser pour chacun de ses personnages.
+* Si ses deux personnages sont dans la mÃªme piÃ¨ce, on demande sÂ’il veut lÂ’utiliser pour les deux personnages
+> Chaque personnage touchÃ© perd 1 PV ou 2 PV selon la couleur du Parasite
+> On enlÃ¨ve du plateau les personnages morts
+* Si un joueur a perdu ses deux personnages, il est Ã©liminÃ© de la partie. SÂ’il possÃ©dait le marqueur Phase des Parasites, il est dÃ©calÃ© au joueur suivant, en gardant son statut
+> Si les conditions de fin de partie sont rÃ©alisÃ©es, on sort de toutes les boucles
+* Si le joueur en cours a le marqueur Phase des Parasites et quÂ’il est dÃ©sactivÃ©, on lÂ’active
+* On dÃ©termine le nombre PA de points dÂ’action du joueur en cours
+* Tant que le joueur possÃ¨de au moins 1 PAÂ :
+- On affiche les actions possibles pour ce joueurÂ :
+> Si le joueur possÃ¨de au moins 6 cartes et quÂ’il possÃ¨de une carte jouable, afficher Â«Â Utiliser une carteÂ Â»
+> Si un personnage du joueur est dans une salle qui peut Ãªtre fouillÃ©e, afficher Â«Â Fouiller une piÃ¨ceÂ Â»
+> Si un personnage du joueur est dans une salle contenant un personnage dÂ’un autre joueur ou un parasite, et que son personnage peut attaquer, afficher Â«Â AttaquerÂ Â»
+> Si un personnage du joueur est dans une salle Terminal et quÂ’il ne lÂ’a pas encore activÃ©, afficher Â«Â Activer le TerminalÂ Â»
+> Si un personnage du joueur est dans une salle Infirmerie et quÂ’il ne lÂ’a pas encore activÃ©e, afficher Â«Â Se soigner Ã  lÂ’InfirmerieÂ Â»
+> Si le soldat du joueur est au Nid et que le joueur possÃ¨de trois Jerricans, afficher Â«Â BrÃ»ler le NidÂ Â»
+> Si un personnage du joueur est dans une salle qui permet de placer la premiÃ¨re carte du tas, ou que celle-ci ne peut Ãªtre placer nulle part, afficher Â«Â ExplorerÂ Â»
+> Si un personnage du joueur est dans une salle qui permet de se dÃ©placer dans une autre salle, afficher Â«Â Se dÃ©placerÂ Â»
+>  SÂ’il choisit Â«Â Utiliser une carteÂ Â»Â :
+* On dÃ©terminer les cartes utilisablesÂ…Â….
+
+- SÂ’il choisit Â«Â Fouiller une piÃ¨ceÂ Â»Â :
+> Si les deux personnages ne sont pas dans la mÃªme piÃ¨ce, choisir une piÃ¨ce
+> Si la piÃ¨ce a dÃ©jÃ  Ã©tÃ© fouillÃ©e, faire apparaÃ®tre un Parasite Ã  lÂ’aide du 1D4. Sinon, indiquer quÂ’elle a Ã©tÃ© fouillÃ©e
+> Si la piÃ¨ce permet la Fouille en Ã©quipe, demander au joueur sÂ’il veut en profiter, et si oui, avec quel autre joueur
+* Distribuer une carte Ã  chacun des deux joueurs
+* Pour chaque carte Parasite tirÃ©e, placer un Parasite Ã  lÂ’aide du 1D4 et dÃ©fausser la carte
+> Si la piÃ¨ce est un entrepÃ´tÂ :
 * Donner trois cartes au joueur actif
-* Pour chaque carte Parasite tirée, placer un Parasite à l’aide du 1D4 et défausser la carte
-> Sinon :
+* Pour chaque carte Parasite tirÃ©e, placer un Parasite Ã  lÂ’aide du 1D4 et dÃ©fausser la carte
+> SinonÂ :
 * Donner une carte au joueur actif
-* Si la carte est un Parasite, placer un Parasite à l’aide du 1D4 et défausser la carte
+* Si la carte est un Parasite, placer un Parasite Ã  lÂ’aide du 1D4 et dÃ©fausser la carte
 
-      
 
-Troisième partie : détermination des gagnants
 
+TroisiÃ¨me partieÂ : dÃ©termination des gagnants
