@@ -7,8 +7,8 @@ class Player:
 		self.game = game
 		self.id = id   #????
 		self.pa = 4
-		self.soldier=character(???,self,"Soldier")
-		self.android=character(???,self,"Androïd")
+		self.soldier=Character(self,"Soldier")
+		self.android=Character(self,"Androïd")
 		
 		#self.hand = [game.draw_object() for i in range(2)]
 		
