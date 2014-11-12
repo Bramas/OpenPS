@@ -2,14 +2,14 @@ import openps as ops
 
 
 class Player:
-	# player types:
-	ANDROID = 0
-	SOLDIER = 1
 
-	def __init__(self, game, id, type):
+	def __init__(self, game, id):
 		self.game = game
-		self.id = id
-		self.type = type
-		self.pv = 4
-		self.hand = [game.draw_object() for i in range(2)]
+		self.id = id   #????
+		self.pa = 4
+		self.soldier=character(???,self,"Soldier")
+		self.android=character(???,self,"Androïd")
+		
+		#self.hand = [game.draw_object() for i in range(2)]
+		
 		ops.log("Player %d:\n - hand: "+str(self.hand), id)
