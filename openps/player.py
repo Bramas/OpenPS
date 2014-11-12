@@ -9,6 +9,6 @@ class Player:
 		self.soldier=ops.Character(self,"Soldier")
 		self.android=ops.Character(self,"Androïd")
 		
-		self.hand = [game.draw_object() for i in range(2)]
+		self.hand = [game.draw_item() for i in range(2)]
 		
 		ops.log("Player %d:\n - hand: "+str(self.hand), id)

@@ -11,7 +11,7 @@ def run():
 	DISPLAYSURF.blit(card, (100, 100))
 	pygame.display.update()
 
-	game2 = ops.Game(2)
+	game2 = ops.Game(4)
 
 	while True: # main game loop
 		for event in pygame.event.get():
