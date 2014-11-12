@@ -7,7 +7,7 @@ class Character:
 	def __init__(self,player,type):
 		self.player = player
 		self.type = type
-		self.location=[x,y]
+		self.location=[]
 		self.pv = 4
 		self.weapon=[]
 		if self.type=="Androïd":

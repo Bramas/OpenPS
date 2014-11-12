@@ -1,8 +1,6 @@
-
 import pygame, sys
 from pygame.locals import *
 import openps as ops
-
 
 def run():
 	pygame.init()
