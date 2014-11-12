@@ -4,6 +4,42 @@
 
 ##Algorithme global
 
+Infos concernant les effectifs des marqueurs Parasites, des cartes objets et des cartes pièces :
+
+10 marqueurs Parasites
+
+* 5 x Parasite gris
+* 5 x Parasite noir
+
+46 cartes objets
+
+* 12 x Jerrican
+* 7 x Gilet Pare-Balles
+* 6 x Munitions
+* 3 x Alerte Parasite !
+* 3 x Kit de Premiers Soins
+* 3 x Carte magnétique
+* 2 x Fusil Mitrailleur
+* 2 x Grenade
+* 2 x Adrénaline
+* 2 x Lunette de Précision
+* 2 x Couteau de Combat
+* 1 x Scanner Corporel
+* 1 x Hôte
+
+20 cartes pièces (toutes différentes)
+
+* 1 x Réacteur
+* 2 x Terminal
+* 1 x Nid
+* 2 x Vide
+* 2 x Entrepôt
+* 1 x Infirmerie
+* 4 x Parasite
+* 4 x Fouille en Equipe
+* 3 x Course
+
+
 ###Première partie : mise en place
 
 Plateau de jeu
