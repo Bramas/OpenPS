@@ -29,16 +29,48 @@ class Game:
 		
 		#doors : [North,West,South,East,Up,Down]
 		
+		rooms_distribution = {
+			ops.Room.RUN          : [
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL),
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL),
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL),
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL)],
+			ops.Room.TEAM         : [
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL),
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL),
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL),
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL)],
+			ops.Room.PARASITE     : [
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL),
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL),
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL),
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL)],
+			ops.Room.EMPTY        : [
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL),
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL)],
+			ops.Room.STORAGE      : [
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL),
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL)],
+			ops.Room.SICK_BAY     : [
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL)]
+		}
+		hive     = ops.Room(ops.Room.HIVE   ,  (ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL))
+		reactor  = ops.Room(ops.Room.REACTOR,  (ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL))
+		terminal = ops.Room(ops.Room.TERMINAL, (ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL))
 		
-		
-		self.rooms_deck = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
+		self.rooms_deck = []
+		for type, l in rooms_distribution.items():
+			for wall in l:
+				self.rooms_deck.append(ops.Room(type, wall))
 		random.shuffle(self.rooms_deck)
+
 		#add Terminal (one room) amongst the second half
-		self.rooms_deck.insert(random.randint(0,9),17)
-		#add Nid amongst the three last cards
-		self.rooms_deck.insert(random.randint(0,2),18)
+		self.rooms_deck.insert(random.randint(0,9), terminal)
+
+		#add hive amongst the three last cards
+		self.rooms_deck.insert(random.randint(0,2), hive)
 		#add Réacteur on top
-		self.rooms_deck.append(19)
+		self.rooms_deck.append(reactor)
 
 	#construction of the deck of items
 	def create_items_deck(self):
