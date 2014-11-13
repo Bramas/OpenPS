@@ -14,3 +14,23 @@ class Player:
 		self.hand         += [ops.Item(ops.Item.BLOOD, blood_player=id) for i in range(3)] # and take your 3 blood cards
 
 		ops.debug("Player %d:\n - hand: "+str(self.hand), id)
+
+	def attack(self):
+		ops.log("Player %d attacks", self.id)
+
+	def search(self):
+		ops.log("Player %d searchs", self.id)
+
+	def activate_terminal(self):
+		ops.log("Player %d activates the terminal", self.id)
+
+	def heal(self):
+		ops.log("Player %d heals", self.id)
+
+	def burn_hive(self):
+		ops.log("Player %d burns the hive", self.id)
+
+	def explore(self):
+		ops.log("Player %d explores", self.id)
+		room = self.game.draw_room()
+		ops.debug(str(room))

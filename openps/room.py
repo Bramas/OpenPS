@@ -29,7 +29,7 @@ class Room:
 	
 	
 	def __str__(self):
-		return self.type
+		return self.type+" "+str(self.walls)
 	def __repr__(self):
 		return self.__str__()
 

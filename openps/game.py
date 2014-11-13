@@ -21,12 +21,17 @@ class Game:
 		self.board.place_room(self.rooms_deck.pop(), (0,0))
 
 		ops.debug("Game created with %d players", nb_players)
+
+		#test actions
+		self.players[0].explore()
 		
 	def draw(self, screen):
 		self.board.draw(screen)
 
 	def draw_item(self):
 		return self.items_deck.pop()
+	def draw_room(self):
+		return self.rooms_deck.pop()
 
 
 	#construction of the deck of rooms
