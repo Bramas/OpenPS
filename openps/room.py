@@ -23,6 +23,7 @@ class Room:
 
 	def __init__(self, type, walls):
 		self.type = type
+		self.search = False
 	
 	
 	def __str__(self):
