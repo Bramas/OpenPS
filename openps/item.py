@@ -18,7 +18,7 @@ class Item:
 	BLOOD 		= "Sang"
 
 
-	def __init__(self, name):
+	def __init__(self, name, blood_player=None):
 		self.name = name
 		self.weapon = False
 		self.blood=False
@@ -28,6 +28,8 @@ class Item:
 
 		if name == Item.BLOOD:
 			self.blood = True
+			self.blood_player = blood_player
+
 
 	def __str__(self):
 		return self.name
