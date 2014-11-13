@@ -37,7 +37,8 @@ class Game:
 
 	#construction of the deck of items
 	def create_items_deck():
-    	base_deck = [1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,3,3,3,3,3,4,4,4,5,5,5,6,6,6,7,7,8,8,9,9,10,10,11,11,12]
+    	base_deck = [1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,3,3,3,3,3,\
+    	4,4,4,5,5,5,6,6,6,7,7,8,8,9,9,10,10,11,11,12]
 		top_deck  = [13]
 		for i in range(self.nb_players):
 			base_deck.remove(1)
