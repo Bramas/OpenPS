@@ -51,7 +51,9 @@ class Game:
 				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL),
 				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL)],
 			ops.Room.SICK_BAY     : [
-				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL)]
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL)],
+			ops.Room.TERMINAL     : [
+				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL)
 		}
 		hive     = ops.Room(ops.Room.HIVE   ,  (ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL))
 		reactor  = ops.Room(ops.Room.REACTOR,  (ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL))
