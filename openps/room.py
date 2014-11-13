@@ -4,6 +4,12 @@ class Room:
 
 	#classe modélisant les Cartes Pièces
 
+
+	WALL        = 1
+	OPEN        = 2
+	CLOSED_DOOR = 3
+	OPENED_DOOR = 4
+
 	def __init__(self, id):
 		self.id = id
 		if id==0:
@@ -49,4 +55,3 @@ class Room:
 			self.name = "Nid"
 		else:
 			self.name = "Réacteur"
-			self.doors = ['o','o','o','o']

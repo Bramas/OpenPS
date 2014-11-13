@@ -26,6 +26,11 @@ class Game:
 
 	#construction of the deck of rooms
 	def create_rooms_deck(self):
+		
+		#doors : [North,West,South,East,Up,Down]
+		
+		
+		
 		self.rooms_deck = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
 		random.shuffle(self.rooms_deck)
 		#add Terminal (one room) amongst the second half

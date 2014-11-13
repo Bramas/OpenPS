@@ -2,7 +2,7 @@ import openps as ops
 
 class Item:
 
-	JERRY 	= "Jerrican"
+	JERRY 	    = "Jerrican"
 	VEST 	 	= "Gilet Pare-Balles"
 	MUNITION 	= "Munitions"
 	PARASITE 	= "Alerte Parasites !"
