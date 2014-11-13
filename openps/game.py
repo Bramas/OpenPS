@@ -33,7 +33,6 @@ class Game:
 			ops.Room.RUN          : [
 				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL),
 				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL),
-				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL),
 				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL)],
 			ops.Room.TEAM         : [
 				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL),
