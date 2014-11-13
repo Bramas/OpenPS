@@ -17,6 +17,9 @@ class Game:
 		#create the players
 		self.players = [ ops.Player(self, i) for i in range(nb_players)]
 
+		self.board = ops.Board();
+		self.board.place_room(self.rooms_deck.pop(), (0,0))
+
 		ops.debug("Game created with %d players", nb_players)
 		
 
