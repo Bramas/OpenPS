@@ -1,4 +1,5 @@
 import openps as ops
+import pygame, sys
 
 class Board:
 
@@ -17,3 +18,8 @@ class Board:
 			return
 
 		self.rooms[position[0]][position[1]] = room
+
+	def draw(self, screen):
+		for x in self.rooms:
+			for y in self.rooms[x]:
+				self.rooms[x][y].draw(screen, (x,y))

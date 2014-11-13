@@ -22,6 +22,8 @@ class Game:
 
 		ops.debug("Game created with %d players", nb_players)
 		
+	def draw(self, screen):
+		self.board.draw(screen)
 
 	def draw_item(self):
 		return self.items_deck.pop()

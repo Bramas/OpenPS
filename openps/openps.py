@@ -7,11 +7,7 @@ def run():
 	DISPLAYSURF = pygame.display.set_mode((800, 600))
 	pygame.display.set_caption('OpenPS')
 
-	card = pygame.image.load("openps/resources/cards/character_jason.jpg")
-	DISPLAYSURF.blit(card, (100, 100))
-	pygame.display.update()
-
-	game2 = ops.Game(4)
+	game = ops.Game(4)
 
 	while True: # main game loop
 		for event in pygame.event.get():
@@ -19,6 +15,8 @@ def run():
 				pygame.quit()
 				sys.exit()
 				pygame.display.update()
+		game.draw(DISPLAYSURF)
+		pygame.display.flip()
 
 
 import logging
