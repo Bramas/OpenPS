@@ -7,6 +7,7 @@ class Player:
 		self.game          = game
 		self.id            = id
 		self.action_points = 4
+		self.ammo          = 0
 		self.soldier       = ops.Character(self,"Soldier")
 		self.android       = ops.Character(self,"Androïd")
 		self.hand          = [game.draw_item()         for i in range(2)] # draw two cards
