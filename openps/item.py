@@ -5,6 +5,7 @@ class Item:
 	def __init__(self, id):
 		self.id = id
 		self.weapon = False
+		self.blood=False
 		if id==1:
 			self.name = "Jerrican"
 		elif id==2:
@@ -32,5 +33,8 @@ class Item:
 			self.weapon = True
 		elif id==12:
 			self.name = "Scanner Corporel"
-		else:
+		elif id==13:
 			self.name = "Hôte"
+		else:
+			#Chaque joueur obtient en début de partie les trois cartes Sang de sa propre couleur
+			self.name = "Sang"
