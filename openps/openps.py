@@ -17,6 +17,7 @@ def run():
 				pygame.quit()
 				sys.exit()
 				pygame.display.update()
+		DISPLAYSURF.fill((255,255,255))
 		game.draw(DISPLAYSURF)
 		pygame.display.flip()
 
