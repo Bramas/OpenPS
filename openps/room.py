@@ -4,6 +4,12 @@ import pygame, sys
 #classe modélisant les Cartes Pièces
 class Room:
 
+	# wall directions
+	NORTH       = 0
+	EAST        = 1
+	SOUTH       = 2
+	WEST        = 3
+
 	# possible walls:
 	WALL        = 1
 	OPEN        = 2
@@ -33,34 +39,41 @@ class Room:
 	def __repr__(self):
 		return self.__str__()
 
-	def draw(self, screen, position):
+	def draw(self, screen, position, preview=False):
 		x = position[0]*100+300
 		y = position[1]*150+300
-		pygame.draw.rect(screen, (255,255,255), (x,y,100,150), 0)
-		if self.walls[0] == Room.WALL:
-			pygame.draw.lines(screen, (150,150,150), False, [(x,y), (x+10,y)], 1)
+		
+		background = (255,255,255)
+		if preview:
+			background = (55,55,55)
+
+		pygame.draw.rect(screen, background, (x,y,100,150), 0)
+		if self.walls[Room.NORTH] == Room.WALL:
+			pygame.draw.lines(screen, (150,150,150), False, [(x,y), (x+100,y)], 1)
 		else:
 			pygame.draw.lines(screen, (150,150,150), False, [(x,y), (x+30,y)], 4)
 			pygame.draw.lines(screen, (150,150,150), False, [(x+70,y), (x+100,y)], 4)
 
-		if self.walls[2] == Room.WALL:
-			pygame.draw.lines(screen, (150,150,150), False, [(x,y+150), (x+100,y+150)], 1)
-		else:
-			pygame.draw.lines(screen, (150,150,150), False, [(x,y+150), (x+30,y+150)], 4)
-			pygame.draw.lines(screen, (150,150,150), False, [(x+70,y+150), (x+100,y+150)], 4)
-
-		if self.walls[1] == Room.WALL:
+		if self.walls[Room.EAST] == Room.WALL:
 			pygame.draw.lines(screen, (150,150,150), False, [(x+100,y), (x+100,y+150)], 1)
 		else:
 			pygame.draw.lines(screen, (150,150,150), False, [(x+100,y), (x+100,y+60)], 4)
 			pygame.draw.lines(screen, (150,150,150), False, [(x+100,y+90), (x+100,y+150)], 4)
 
-		if self.walls[3] == Room.WALL:
+		if self.walls[Room.SOUTH] == Room.WALL:
+			pygame.draw.lines(screen, (150,150,150), False, [(x,y+150), (x+100,y+150)], 1)
+		else:
+			pygame.draw.lines(screen, (150,150,150), False, [(x,y+150), (x+30,y+150)], 4)
+			pygame.draw.lines(screen, (150,150,150), False, [(x+70,y+150), (x+100,y+150)], 4)
+
+		if self.walls[Room.WEST] == Room.WALL:
 			pygame.draw.lines(screen, (150,150,150), False, [(x,y), (x,y+150)], 1)
 		else:
 			pygame.draw.lines(screen, (150,150,150), False, [(x,y), (x,y+60)], 4)
 			pygame.draw.lines(screen, (150,150,150), False, [(x,y+90), (x,y+150)], 4)
 
+	def walkable(self, direction):
+		return self.walls[direction] == Room.OPEN or self.walls[direction] == Room.OPENED_DOOR
 
 
 

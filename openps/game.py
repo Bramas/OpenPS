@@ -23,7 +23,10 @@ class Game:
 		ops.debug("Game created with %d players", nb_players)
 
 		#test actions
-		self.players[0].explore()
+		r = self.draw_room()
+		print(str(r))
+		self.board.set_room_preview(r)
+		#self.players[0].explore()
 		
 	def draw(self, screen):
 		self.board.draw(screen)
