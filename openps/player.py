@@ -34,3 +34,10 @@ class Player:
 		ops.log("Player %d explores", self.id)
 		room = self.game.draw_room()
 		ops.debug(str(room))
+
+	#def move(self):
+	
+	#def play_card(self):
+
+	#def skip_turn(self):
+		
