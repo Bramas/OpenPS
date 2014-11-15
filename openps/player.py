@@ -17,18 +17,7 @@ class Player:
 		ops.debug("Player %d:\n - hand: "+str(self.hand), id)
 		self.font = pygame.font.SysFont('verdana', 12) 
 
-	def draw(self, screen):
-		soldierRect = pygame.Rect(200, screen.get_height() - 150, 130, 100)
-		soldierText = self.font.render("Soldat", True,  (0, 0, 0))
-		pygame.draw.rect(screen, (205,205,205), soldierRect, 0)
-		pygame.draw.rect(screen, (100,100,100), soldierRect, 2)
-		screen.blit(soldierText, soldierRect)
-
-		androidRect = pygame.Rect(330, screen.get_height() - 150, 130, 100)
-		androidText = self.font.render("Andoïd", True,  (0, 0, 0))
-		pygame.draw.rect(screen, (205,205,205), androidRect, 0)
-		pygame.draw.rect(screen, (100,100,100), androidRect, 2)
-		screen.blit(androidText, androidRect)
+	def update(self, screen):
 
 		x = 100
 		for card in self.hand: 
@@ -58,6 +47,7 @@ class Player:
 					else:
 						ops.debug("Play %s", card.name)
 					self.hand.remove(card)
+					self.game.discard(card)
 		else:
 			self.search()
 

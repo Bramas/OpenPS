@@ -1,5 +1,6 @@
 import openps as ops
 import pygame, sys
+import collections 
 
 #classe modélisant les Cartes Pièces
 class Room:
@@ -32,6 +33,8 @@ class Room:
 		self.type = type
 		self.search = False
 		self.walls = walls
+		self.position = None
+		self.characters = set()
 	
 	
 	def __str__(self):
@@ -39,7 +42,12 @@ class Room:
 	def __repr__(self):
 		return self.__str__()
 
-	def draw(self, screen, position, preview=False):
+	def place_character(self, character):
+		self.characters.add(character)
+	def remove_character(self, character):
+		self.characters.remove(character)
+
+	def update(self, screen, position, preview=False):
 		x = position[0]*100+300
 		y = position[1]*150+300
 		
@@ -71,6 +79,11 @@ class Room:
 		else:
 			pygame.draw.lines(screen, (150,150,150), False, [(x,y), (x,y+60)], 4)
 			pygame.draw.lines(screen, (150,150,150), False, [(x,y+90), (x,y+150)], 4)
+
+		x,y = x+5, y+5
+		for character in self.characters:
+			character.update(screen, (x,y))
+			y += 35
 
 	def walkable(self, direction):
 		return self.walls[direction] == Room.OPEN or self.walls[direction] == Room.OPENED_DOOR

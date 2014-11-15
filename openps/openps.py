@@ -4,6 +4,7 @@ import openps as ops
 
 def run():
 	pygame.init()
+	ops.font = pygame.font.SysFont('verdana', 12) 
 	DISPLAYSURF = pygame.display.set_mode((1024, 780))
 	pygame.display.set_caption('OpenPS')
 
@@ -18,7 +19,7 @@ def run():
 				sys.exit()
 				pygame.display.update()
 		DISPLAYSURF.fill((255,255,255))
-		game.draw(DISPLAYSURF)
+		game.update(DISPLAYSURF)
 		pygame.display.flip()
 
 
@@ -29,3 +30,4 @@ def log(msg, *args):
 def debug(msg, *args):
 	print(msg % args)
 	#logging.info(msg, args)
+

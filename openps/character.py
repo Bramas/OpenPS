@@ -1,4 +1,5 @@
 import openps as ops
+import pygame, sys
 
 class Character:
 
@@ -15,3 +16,13 @@ class Character:
 			self.weapon.append("Gun")
 		else:
 			self.weapon.append("Flamethrower")
+
+	def update(self, screen, position):
+		if self.room == None:
+			return
+
+		soldierRect = pygame.Rect(position, (60, 30))
+		soldierText = ops.font.render(self.type, True,  (0, 0, 0))
+		pygame.draw.rect(screen, (205,205,205), soldierRect, 0)
+		pygame.draw.rect(screen, (100,100,100), soldierRect, 2)
+		screen.blit(soldierText, soldierRect)

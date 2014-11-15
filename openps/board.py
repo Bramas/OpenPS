@@ -13,13 +13,20 @@ class Board:
 			ops.error("Cannot place a room where there is already a room")
 			return
 		self.rooms[position] = room
+		room.position = position
 
-	def draw(self, screen):
+	def move_character(self, character, room):
+		if character.room != None:
+			character.room.remove(character)
+		room.place_character(character)
+		character.room = room
+
+	def update(self, screen):
 		for position in self.rooms:
-			self.rooms[position].draw(screen, position)
+			self.rooms[position].update(screen, position)
 
 		for position in self.room_preview_positions:
-			self.room_preview.draw(screen, position, preview=True)
+			self.room_preview.update(screen, position, preview=True)
 
 	def set_room_preview(self, preview_room):
 		self.room_preview_positions = []

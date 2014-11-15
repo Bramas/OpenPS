@@ -18,30 +18,37 @@ class Game:
 		self.players = [ ops.Player(self, i) for i in range(nb_players)]
 
 		self.board = ops.Board();
-		self.board.place_room(self.rooms_deck.pop(), (0,0))
+
+		reactor = self.rooms_deck.pop()
+		self.board.place_room(reactor, (0,0))
 
 		ops.debug("Game created with %d players", nb_players)
 
 		#test actions
+		self.board.move_character(self.players[0].soldier, reactor)
+		self.board.move_character(self.players[0].android, reactor)
 		r = self.draw_room()
 		print(str(r))
 		self.board.set_room_preview(r)
 		#self.players[0].explore()
 		
-	def draw(self, screen):
-		self.board.draw(screen)
-		self.players[0].draw(screen)
+	def update(self, screen):
+		self.board.update(screen)
+		self.players[0].update(screen)
 
 	def draw_item(self):
 		if len(self.items_deck) == 0:
-			# if there is no more card in the deck we move the discard to the deck and then shiffle
-			while len(self.discard) > 0:
-				self.items_deck.append(self.discard.pop())
+			# if there is no more card in the deck we move the discard_deck to the deck and then shiffle
+			while len(self.discard_deck) > 0:
+				self.items_deck.append(self.discard_deck.pop())
 			random.shuffle(self.items_deck)
 
 		return self.items_deck.pop()
 	def draw_room(self):
 		return self.rooms_deck.pop()
+
+	def discard(self, card):
+		return self.discard_deck.append(card)
 
 	def on_mouse_press(self, position):
 		self.board.on_mouse_press(position)
@@ -128,4 +135,4 @@ class Game:
 
 		random.shuffle(top_deck)
 		self.items_deck = top_deck
-		self.discard = base_deck
+		self.discard_deck = base_deck
