@@ -30,13 +30,23 @@ class Game:
 		
 	def draw(self, screen):
 		self.board.draw(screen)
-		for p in self.players:
-			p.draw(screen)
+		self.players[0].draw(screen)
 
 	def draw_item(self):
+		if len(self.items_deck) == 0:
+			# if there is no more card in the deck we move the discard to the deck and then shiffle
+			while len(self.discard) > 0:
+				self.items_deck.append(self.discard.pop())
+			random.shuffle(self.items_deck)
+
 		return self.items_deck.pop()
 	def draw_room(self):
 		return self.rooms_deck.pop()
+
+	def on_mouse_press(self, position):
+		self.board.on_mouse_press(position)
+		self.players[0].on_mouse_press(position)
+
 
 
 	#construction of the deck of rooms

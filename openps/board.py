@@ -45,3 +45,6 @@ class Board:
 
 		if len(self.room_preview_positions) > 0:
 			self.room_preview = preview_room
+
+	def on_mouse_press(self, position):
+		return

@@ -18,9 +18,21 @@ class Player:
 		self.font = pygame.font.SysFont('verdana', 12) 
 
 	def draw(self, screen):
+		soldierRect = pygame.Rect(200, screen.get_height() - 150, 130, 100)
+		soldierText = self.font.render("Soldat", True,  (0, 0, 0))
+		pygame.draw.rect(screen, (205,205,205), soldierRect, 0)
+		pygame.draw.rect(screen, (100,100,100), soldierRect, 2)
+		screen.blit(soldierText, soldierRect)
+
+		androidRect = pygame.Rect(330, screen.get_height() - 150, 130, 100)
+		androidText = self.font.render("Andoïd", True,  (0, 0, 0))
+		pygame.draw.rect(screen, (205,205,205), androidRect, 0)
+		pygame.draw.rect(screen, (100,100,100), androidRect, 2)
+		screen.blit(androidText, androidRect)
+
 		x = 100
 		for card in self.hand: 
-			cardRect = pygame.Rect(x, screen.get_height() - 150, 130, 150)
+			cardRect = pygame.Rect(x, screen.get_height() - 50, 130, 150)
 			if cardRect.collidepoint(pygame.mouse.get_pos()):
 				cardColor = (255,255,255)
 			else:
@@ -34,11 +46,33 @@ class Player:
 			screen.blit(textSurfaceObj, cardRect)
 			x += 130
 
+	def on_mouse_press(self, position):
+		x = 100
+		if len(self.hand) > 5:
+			for card in self.hand: 
+				cardRect = pygame.Rect(x, pygame.display.get_surface().get_height() - 50, 130, 150)
+				x += 130
+				if cardRect.collidepoint(position):
+					if card.need_target():
+						ops.debug("Play %s that need a target", card.name)
+					else:
+						ops.debug("Play %s", card.name)
+					self.hand.remove(card)
+		else:
+			self.search()
+
 	def attack(self):
 		ops.log("Player %d attacks", self.id)
 
 	def search(self):
 		ops.log("Player %d searchs", self.id)
+		card = self.game.draw_item()
+		if card.name == ops.Item.PARASITE:
+			ops.log("Player %d found a parasite", self.id)
+		else:
+			ops.log("Player %d found %s", self.id, card.name)
+			self.hand.append(card)
+
 
 	def activate_terminal(self):
 		ops.log("Player %d activates the terminal", self.id)
