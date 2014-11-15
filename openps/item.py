@@ -30,6 +30,10 @@ class Item:
 			self.blood = True
 			self.blood_player = blood_player
 
+	def need_target(self):
+		if self.name in [Item.HEALTH_KIT, Item.SCANNER]:
+			return True
+		return False
 
 	def __str__(self):
 		return self.name
