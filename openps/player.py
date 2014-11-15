@@ -1,4 +1,5 @@
 import openps as ops
+import pygame, sys
 
 class Player:
 
@@ -14,6 +15,24 @@ class Player:
 		self.hand         += [ops.Item(ops.Item.BLOOD, blood_player=id) for i in range(3)] # and take your 3 blood cards
 
 		ops.debug("Player %d:\n - hand: "+str(self.hand), id)
+		self.font = pygame.font.SysFont('verdana', 12) 
+
+	def draw(self, screen):
+		x = 100
+		for card in self.hand: 
+			cardRect = pygame.Rect(x, screen.get_height() - 150, 130, 150)
+			if cardRect.collidepoint(pygame.mouse.get_pos()):
+				cardColor = (255,255,255)
+			else:
+				cardColor = (205,205,205)
+
+			pygame.draw.rect(screen, cardColor, cardRect, 0)
+			pygame.draw.rect(screen, (100,100,100), cardRect, 2)
+			textSurfaceObj = self.font.render(card.name, True,  (0, 0, 0))
+			cardRect.x+=5
+			cardRect.y+=5
+			screen.blit(textSurfaceObj, cardRect)
+			x += 130
 
 	def attack(self):
 		ops.log("Player %d attacks", self.id)

@@ -27,6 +27,8 @@ class Game:
 		
 	def draw(self, screen):
 		self.board.draw(screen)
+		for p in self.players:
+			p.draw(screen)
 
 	def draw_item(self):
 		return self.items_deck.pop()

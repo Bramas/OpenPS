@@ -4,7 +4,7 @@ import openps as ops
 
 def run():
 	pygame.init()
-	DISPLAYSURF = pygame.display.set_mode((800, 600))
+	DISPLAYSURF = pygame.display.set_mode((1024, 780))
 	pygame.display.set_caption('OpenPS')
 
 	game = ops.Game(4)
