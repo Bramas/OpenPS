@@ -7,11 +7,17 @@ class Player:
 		
 		self.game          = game
 		self.id            = id
+		self.infection     = False
 		self.action_points = 4
 		self.ammo          = 0
 		self.soldier       = ops.Character(self,"Soldier")
 		self.android       = ops.Character(self,"Androïd")
 		self.hand          = [game.draw_item()         for i in range(2)] # draw two cards
+		
+		#tant qu'un parasite est dans la main de départ, on le défausse, on place un parasite et on tire une autre carte
+		
+		#si l'Hôte est tiré, self.infection = False
+		
 		self.hand         += [ops.Item(ops.Item.BLOOD, blood_player=id) for i in range(3)] # and take your 3 blood cards
 
 		ops.debug("Player %d:\n - hand: "+str(self.hand), id)

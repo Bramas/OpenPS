@@ -38,7 +38,7 @@ class Game:
 
 	def draw_item(self):
 		if len(self.items_deck) == 0:
-			# if there is no more card in the deck we move the discard_deck to the deck and then shiffle
+			# if there is no more card in the deck we move the discard_deck to the deck and then shuffle
 			while len(self.discard_deck) > 0:
 				self.items_deck.append(self.discard_deck.pop())
 			random.shuffle(self.items_deck)
