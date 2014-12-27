@@ -1,5 +1,8 @@
-import openps as ops
+# -*- coding:utf8 -*-
 import pygame, sys
+from . import glb
+from .room import Room
+from .item import Item
 
 class Board:
 
@@ -10,7 +13,7 @@ class Board:
 
 	def place_room(self, room, position):
 		if position in self.rooms:
-			ops.error("Cannot place a room where there is already a room")
+			glb.error("Cannot place a room where there is already a room")
 			return
 		self.rooms[position] = room
 		room.position = position
@@ -34,20 +37,20 @@ class Board:
 		# compute possible positions for the preview_room
 		for (x,y) in self.rooms:
 			if not (x-1, y) in self.rooms:
-				if preview_room.walkable(ops.Room.EAST) \
-					and self.rooms[(x, y)].walkable(ops.Room.WEST):
+				if preview_room.walkable(Room.EAST) \
+					and self.rooms[(x, y)].walkable(Room.WEST):
 					self.room_preview_positions.append((x-1, y))
 			if not (x+1, y) in self.rooms:
-				if preview_room.walkable(ops.Room.WEST) \
-					and self.rooms[(x, y)].walkable(ops.Room.EAST):
+				if preview_room.walkable(Room.WEST) \
+					and self.rooms[(x, y)].walkable(Room.EAST):
 					self.room_preview_positions.append((x+1, y))
 			if not (x, y-1) in self.rooms:
-				if preview_room.walkable(ops.Room.SOUTH) \
-					and self.rooms[(x, y)].walkable(ops.Room.NORTH):
+				if preview_room.walkable(Room.SOUTH) \
+					and self.rooms[(x, y)].walkable(Room.NORTH):
 					self.room_preview_positions.append((x, y-1))
 			if not (x, y+1) in self.rooms:
-				if preview_room.walkable(ops.Room.NORTH) \
-					and self.rooms[(x, y)].walkable(ops.Room.SOUTH):
+				if preview_room.walkable(Room.NORTH) \
+					and self.rooms[(x, y)].walkable(Room.SOUTH):
 					self.room_preview_positions.append((x, y+1))
 
 		if len(self.room_preview_positions) > 0:

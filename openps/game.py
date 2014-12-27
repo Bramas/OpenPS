@@ -1,4 +1,9 @@
-import openps as ops
+from .room import Room
+from .item import Item
+from . import player
+from . import ia
+from . import board
+from . import glb
 
 import random
 
@@ -15,14 +20,27 @@ class Game:
 		self.create_items_deck()
 
 		#create the players
-		self.players = [ ops.Player(self, i) for i in range(nb_players)]
+		playerId = 0
+		self.players = []
+		self.players.append(player.Player(self, playerId))
+		for i in range(nb_players - 1):
+			playerId += 1
+			self.players.append(ia.IA(self, playerId))
 
-		self.board = ops.Board();
+		self.board = board.Board();
 
 		reactor = self.rooms_deck.pop()
 		self.board.place_room(reactor, (0,0))
 
-		ops.debug("Game created with %d players", nb_players)
+		glb.debug("Game created with %d players", nb_players)
+
+
+		while True:
+			for currentPlayer in self.players:
+				currentPlayer.play()
+			break
+
+
 
 		#test actions
 		self.board.move_character(self.players[0].soldier, reactor)
@@ -62,39 +80,39 @@ class Game:
 		#doors : [North,West,South,East,Up,Down]
 		
 		rooms_distribution = {
-			ops.Room.RUN          : [
-				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL),
-				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL),
-				(ops.Room.WALL, ops.Room.WALL, ops.Room.WALL, ops.Room.WALL)],
-			ops.Room.TEAM         : [
-				(ops.Room.WALL, ops.Room.OPEN, ops.Room.OPEN, ops.Room.WALL),
-				(ops.Room.OPEN, ops.Room.OPEN, ops.Room.WALL, ops.Room.CLOSED_DOOR),
-				(ops.Room.OPEN, ops.Room.WALL, ops.Room.WALL, ops.Room.OPEN),
-				(ops.Room.CLOSED_DOOR, ops.Room.WALL, ops.Room.OPEN, ops.Room.WALL)],
-			ops.Room.PARASITE     : [
-				(ops.Room.OPEN, ops.Room.OPEN, ops.Room.WALL, ops.Room.OPEN),
-				(ops.Room.OPEN, ops.Room.OPEN, ops.Room.OPEN, ops.Room.WALL),
-				(ops.Room.WALL, ops.Room.OPEN, ops.Room.OPEN, ops.Room.WALL),
-				(ops.Room.WALL, ops.Room.OPEN, ops.Room.OPEN, ops.Room.OPEN)],
-			ops.Room.EMPTY        : [
-				(ops.Room.OPEN, ops.Room.OPEN, ops.Room.WALL, ops.Room.OPEN),
-				(ops.Room.OPEN, ops.Room.OPEN, ops.Room.CLOSED_DOOR, ops.Room.CLOSED_DOOR)],
-			ops.Room.STORAGE      : [
-				(ops.Room.WALL, ops.Room.OPEN, ops.Room.OPEN, ops.Room.WALL),
-				(ops.Room.OPEN, ops.Room.OPEN, ops.Room.WALL, ops.Room.OPEN)],
-			ops.Room.SICK_BAY     : [
-				(ops.Room.WALL, ops.Room.WALL, ops.Room.OPEN, ops.Room.WALL)],
-			ops.Room.TERMINAL     : [
-				(ops.Room.WALL, ops.Room.WALL, ops.Room.OPEN, ops.Room.WALL)]
+			Room.RUN          : [
+				(Room.WALL, Room.WALL, Room.WALL, Room.WALL),
+				(Room.WALL, Room.WALL, Room.WALL, Room.WALL),
+				(Room.WALL, Room.WALL, Room.WALL, Room.WALL)],
+			Room.TEAM         : [
+				(Room.WALL, Room.OPEN, Room.OPEN, Room.WALL),
+				(Room.OPEN, Room.OPEN, Room.WALL, Room.CLOSED_DOOR),
+				(Room.OPEN, Room.WALL, Room.WALL, Room.OPEN),
+				(Room.CLOSED_DOOR, Room.WALL, Room.OPEN, Room.WALL)],
+			Room.PARASITE     : [
+				(Room.OPEN, Room.OPEN, Room.WALL, Room.OPEN),
+				(Room.OPEN, Room.OPEN, Room.OPEN, Room.WALL),
+				(Room.WALL, Room.OPEN, Room.OPEN, Room.WALL),
+				(Room.WALL, Room.OPEN, Room.OPEN, Room.OPEN)],
+			Room.EMPTY        : [
+				(Room.OPEN, Room.OPEN, Room.WALL, Room.OPEN),
+				(Room.OPEN, Room.OPEN, Room.CLOSED_DOOR, Room.CLOSED_DOOR)],
+			Room.STORAGE      : [
+				(Room.WALL, Room.OPEN, Room.OPEN, Room.WALL),
+				(Room.OPEN, Room.OPEN, Room.WALL, Room.OPEN)],
+			Room.SICK_BAY     : [
+				(Room.WALL, Room.WALL, Room.OPEN, Room.WALL)],
+			Room.TERMINAL     : [
+				(Room.WALL, Room.WALL, Room.OPEN, Room.WALL)]
 		}
-		hive     = ops.Room(ops.Room.HIVE   ,  (ops.Room.WALL, ops.Room.WALL, ops.Room.OPEN, ops.Room.WALL))
-		reactor  = ops.Room(ops.Room.REACTOR,  (ops.Room.OPEN, ops.Room.OPEN, ops.Room.OPEN, ops.Room.OPEN))
-		terminal = ops.Room(ops.Room.TERMINAL, (ops.Room.WALL, ops.Room.WALL, ops.Room.OPEN, ops.Room.WALL))
+		hive     = Room(Room.HIVE   ,  (Room.WALL, Room.WALL, Room.OPEN, Room.WALL))
+		reactor  = Room(Room.REACTOR,  (Room.OPEN, Room.OPEN, Room.OPEN, Room.OPEN))
+		terminal = Room(Room.TERMINAL, (Room.WALL, Room.WALL, Room.OPEN, Room.WALL))
 		
 		self.rooms_deck = []
 		for type, l in rooms_distribution.items():
 			for wall in l:
-				self.rooms_deck.append(ops.Room(type, wall))
+				self.rooms_deck.append(Room(type, wall))
 		random.shuffle(self.rooms_deck)
 
 		#add Terminal (one room) amongst the second half
@@ -102,29 +120,29 @@ class Game:
 
 		#add hive amongst the three last cards
 		self.rooms_deck.insert(random.randint(0,2), hive)
-		#add Réacteur on top
+		#add Reacteur on top
 		self.rooms_deck.append(reactor)
 
 	#construction of the deck of items
 	def create_items_deck(self):
 		base_item_distribution = {
-			ops.Item.JERRY      :12,
-			ops.Item.VEST       :7,
-			ops.Item.MUNITION   :6,
-			ops.Item.PARASITE   :3,
-			ops.Item.HEALTH_KIT :3,
-			ops.Item.MAGNET     :3,
-			ops.Item.MACHINE_GUN:2,
-			ops.Item.GRENADE    :2,
-			ops.Item.ADRENALINE :2,
-			ops.Item.GLASSES    :2,
-			ops.Item.KNIFE      :2,
-			ops.Item.SCANNER    :1
+			Item.JERRY      :12,
+			Item.VEST       :7,
+			Item.MUNITION   :6,
+			Item.PARASITE   :3,
+			Item.HEALTH_KIT :3,
+			Item.MAGNET     :3,
+			Item.MACHINE_GUN:2,
+			Item.GRENADE    :2,
+			Item.ADRENALINE :2,
+			Item.GLASSES    :2,
+			Item.KNIFE      :2,
+			Item.SCANNER    :1
 		}
 		base_deck = []
 		for item, count in base_item_distribution.items():
-			base_deck += [ops.Item(item) for i in range(count)]
-		top_deck = [ops.Item(ops.Item.HOST)]
+			base_deck += [Item(item) for i in range(count)]
+		top_deck = [Item(Item.HOST)]
 
 		for i in range(self.nb_players):
 			top_deck.append(base_deck.pop(0)) # transfert a jerry

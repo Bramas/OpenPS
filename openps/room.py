@@ -1,8 +1,9 @@
-import openps as ops
+# -*- coding:utf8 -*-
 import pygame, sys
-import collections 
+import collections
 
-#classe modélisant les Cartes Pièces
+
+#classe modélisant les Cartes Pieces
 class Room:
 
 	# wall directions

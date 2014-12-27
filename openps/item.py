@@ -1,4 +1,4 @@
-import openps as ops
+# -*- coding:utf8 -*-
 
 class Item:
 

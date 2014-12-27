@@ -1,4 +1,4 @@
-from openps import openps
+import openps
 
 print("setup: running openps")
 openps.run()
