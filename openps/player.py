@@ -4,6 +4,7 @@ from . import character
 from . import glb
 from .room import Room
 from .item import Item
+import mutex
 
 class Player:
 
@@ -17,6 +18,8 @@ class Player:
 		self.soldier       = character.Character(self,"Soldier")
 		self.android       = character.Character(self,"Androïd")
 		self.hand          = [game.draw_item()         for i in range(2)] # draw two cards
+		self.is_playing	   = False
+		self.play_mutex    = mutex.mutex()
 		
 		#tant qu'un parasite est dans la main de départ, on le défausse, on place un parasite et on tire une autre carte
 		
@@ -47,7 +50,10 @@ class Player:
 
 	def on_mouse_press(self, position):
 		x = 100
-		if len(self.hand) > 5:
+		if position[0] < 10:
+			glb.debug("end_turn")
+			self.end_turn()
+		elif len(self.hand) > 5:
 			for card in self.hand: 
 				cardRect = pygame.Rect(x, pygame.display.get_surface().get_height() - 50, 130, 150)
 				x += 130
@@ -74,6 +80,7 @@ class Player:
 			self.hand.append(card)
 
 	def play(self):
+		self.is_playing	   = True
 		glb.log("player %d plays", self.id)
 
 	def activate_terminal(self):
@@ -89,6 +96,10 @@ class Player:
 		glb.log("Player %d explores", self.id)
 		room = self.game.draw_room()
 		glb.debug(str(room))
+
+
+	def end_turn(self):
+		self.game.end_turn(self)
 
 	#def move(self):
 	

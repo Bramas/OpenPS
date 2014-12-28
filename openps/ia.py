@@ -8,3 +8,5 @@ from .item import Item
 class IA(player.Player):
 	def play(self):
 		glb.log("Player %d (IA) plays", self.id)
+		self.search()
+		self.end_turn()

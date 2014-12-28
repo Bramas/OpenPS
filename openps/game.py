@@ -27,6 +27,8 @@ class Game:
 			playerId += 1
 			self.players.append(ia.IA(self, playerId))
 
+		self.current_player = self.players[0]
+
 		self.board = board.Board();
 
 		reactor = self.rooms_deck.pop()
@@ -35,10 +37,6 @@ class Game:
 		glb.debug("Game created with %d players", nb_players)
 
 
-		while True:
-			for currentPlayer in self.players:
-				currentPlayer.play()
-			break
 
 
 
@@ -49,6 +47,9 @@ class Game:
 		print(str(r))
 		self.board.set_room_preview(r)
 		#self.players[0].explore()
+
+
+		self.current_player.play()
 		
 	def update(self, screen):
 		self.board.update(screen)
@@ -73,6 +74,13 @@ class Game:
 		self.players[0].on_mouse_press(position)
 
 
+	def end_turn(self, player):
+		if player == self.current_player:
+			glb.debug('player %d ended the turn', self.current_player.id)
+			self.current_player = self.players[(self.current_player.id + 1)%self.nb_players]
+			self.current_player.play()
+		else:
+			glb.debug('wrong player ended the turn')
 
 	#construction of the deck of rooms
 	def create_rooms_deck(self):
