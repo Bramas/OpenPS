@@ -1,6 +1,6 @@
 # -*- coding:utf8 -*-
 import pygame, sys
-from . import glb
+from . import glb as ops
 
 class Character:
 
@@ -23,7 +23,7 @@ class Character:
 			return
 
 		soldierRect = pygame.Rect(position, (60, 30))
-		soldierText = glb.defaultFont.render(self.type, True,  (0, 0, 0))
+		soldierText = ops.DefaultFont.render(self.type, True,  (0, 0, 0))
 		pygame.draw.rect(screen, (205,205,205), soldierRect, 0)
 		pygame.draw.rect(screen, (100,100,100), soldierRect, 2)
 		screen.blit(soldierText, soldierRect)

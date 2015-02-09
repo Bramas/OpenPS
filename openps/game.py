@@ -1,13 +1,14 @@
+
+import random
+
 from .room import Room
 from .item import Item
 from . import player
 from . import ia
 from . import board
-from . import glb
+from . import glb as ops
 
-import random
-
-class Game:
+class _Game:
 
 	def __init__(self, nb_players):
 		#deterministic randomness:
@@ -34,7 +35,7 @@ class Game:
 		reactor = self.rooms_deck.pop()
 		self.board.place_room(reactor, (0,0))
 
-		glb.debug("Game created with %d players", nb_players)
+		ops.debug("Game created with %d players", nb_players)
 
 
 
@@ -162,3 +163,18 @@ class Game:
 		random.shuffle(top_deck)
 		self.items_deck = top_deck
 		self.discard_deck = base_deck
+
+
+
+
+class _GameInstance:
+	instance = None
+	def __init__(self, nb_players):
+		if not _GameInstance.instance:
+			_GameInstance.instance = _Game(nb_players)
+
+
+
+def Game(nb_players = None):
+	_GameInstance(nb_players)
+	return _GameInstance.instance

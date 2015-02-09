@@ -1,8 +1,9 @@
 # -*- coding:utf8 -*-
 import pygame, sys
-from . import glb
+from . import glb as ops
 from .room import Room
-from .item import Item
+
+
 
 class Board:
 
@@ -75,7 +76,7 @@ class Board:
 		if not self.room_preview:
 			return
 
-		self.room_preview = ops.Room(self.room_preview.type, (
+		self.room_preview = Room(self.room_preview.type, (
 			self.room_preview.walls[2],
 			self.room_preview.walls[3],
 			self.room_preview.walls[0],

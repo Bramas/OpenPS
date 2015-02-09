@@ -1,10 +1,10 @@
 # -*- coding:utf8 -*-
 import pygame, sys
 from . import character
-from . import glb
+from . import glb as ops
 from .room import Room
 from .item import Item
-import mutex
+import threading
 
 class Player:
 
@@ -19,7 +19,7 @@ class Player:
 		self.android       = character.Character(self,"Androïd")
 		self.hand          = [game.draw_item()         for i in range(2)] # draw two cards
 		self.is_playing	   = False
-		self.play_mutex    = mutex.mutex()
+		self.play_mutex    = threading.Semaphore()
 		
 		#tant qu'un parasite est dans la main de départ, on le défausse, on place un parasite et on tire une autre carte
 		
@@ -27,8 +27,8 @@ class Player:
 		
 		self.hand         += [Item(Item.BLOOD, blood_player=id) for i in range(3)] # and take your 3 blood cards
 
-		glb.debug("Player %d:\n - hand: "+str(self.hand), id)
-		self.font = glb.defaultFont
+		ops.debug("Player %d:\n - hand: "+str(self.hand), id)
+		self.font = ops.DefaultFont
 
 	def update(self, screen):
 
@@ -51,7 +51,7 @@ class Player:
 	def on_mouse_press(self, position):
 		x = 100
 		if position[0] < 10:
-			glb.debug("end_turn")
+			ops.debug("end_turn")
 			self.end_turn()
 		elif len(self.hand) > 5:
 			for card in self.hand: 
@@ -59,43 +59,43 @@ class Player:
 				x += 130
 				if cardRect.collidepoint(position):
 					if card.need_target():
-						glb.debug("Play %s that need a target", card.name)
+						ops.debug("Play %s that need a target", card.name)
 					else:
-						glb.debug("Play %s", card.name)
+						ops.debug("Play %s", card.name)
 					self.hand.remove(card)
 					self.game.discard(card)
 		else:
 			self.search()
 
 	def attack(self):
-		glb.log("Player %d attacks", self.id)
+		ops.log("Player %d attacks", self.id)
 
 	def search(self):
-		glb.log("Player %d searchs", self.id)
+		ops.log("Player %d searchs", self.id)
 		card = self.game.draw_item()
 		if card.name == Item.PARASITE:
-			glb.log("Player %d found a parasite", self.id)
+			ops.log("Player %d found a parasite", self.id)
 		else:
-			glb.log("Player %d found %s", self.id, card.name)
+			ops.log("Player %d found %s", self.id, card.name)
 			self.hand.append(card)
 
 	def play(self):
 		self.is_playing	   = True
-		glb.log("player %d plays", self.id)
+		ops.log("player %d plays", self.id)
 
 	def activate_terminal(self):
-		glb.log("Player %d activates the terminal", self.id)
+		ops.log("Player %d activates the terminal", self.id)
 
 	def heal(self):
-		glb.log("Player %d heals", self.id)
+		ops.log("Player %d heals", self.id)
 
 	def burn_hive(self):
-		glb.log("Player %d burns the hive", self.id)
+		ops.log("Player %d burns the hive", self.id)
 
 	def explore(self):
-		glb.log("Player %d explores", self.id)
+		ops.log("Player %d explores", self.id)
 		room = self.game.draw_room()
-		glb.debug(str(room))
+		ops.debug(str(room))
 
 
 	def end_turn(self):

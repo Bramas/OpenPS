@@ -1,4 +1,5 @@
-from . import *
+import pygame, sys
+from pygame.locals import *
 
 
 
@@ -9,3 +10,5 @@ def log(msg, *args):
 def debug(msg, *args):
 	print(msg % args)
 	#logging.info(msg, args)
+
+DefaultFont = pygame.font.Font("openps/resources/fonts/Regan Slab Medium.ttf", 12) 
