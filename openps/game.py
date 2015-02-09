@@ -46,7 +46,7 @@ class _Game:
 		self.board.move_character(self.players[0].android, reactor)
 		r = self.draw_room()
 		print(str(r))
-		self.board.set_room_preview(r)
+
 		#self.players[0].explore()
 
 
@@ -64,8 +64,29 @@ class _Game:
 			random.shuffle(self.items_deck)
 
 		return self.items_deck.pop()
+		
 	def draw_room(self):
-		return self.rooms_deck.pop()
+		r=self.rooms_deck.pop()
+		
+		self.board.set_room_preview(r)
+		# compute possible positions for the preview_room
+
+		if len(self.board.room_preview_positions) == 0:
+			#if the room doesn't fit
+			ops.debug("no preview for this room")
+
+			#s'il existe un autre endroit sur le plan où on peut placer la room, alors :
+				#il ne se passe rien, l'action d'exploration échoue.
+			#s'il n'existe aucun autre endroit où placer la room, alors :
+				#soit il s'agit du Hive, alors :
+					#on affecte chacune de ses ouvertures à la suivante
+					#(North -> West, West -> South, ...)
+					#on modifie son aspect (carré à la place de rectangulaire)
+				#soit il s'agit d'un autre type, dans ce cas :
+					#on met la room sous la pioche
+					#on tente de placer la nouvelle room qui est apparue au sommet de la pioche
+					#soit on arrive à la placer, soit non, mais on ne fait pas d'autre vérification
+
 
 	def discard(self, card):
 		return self.discard_deck.append(card)

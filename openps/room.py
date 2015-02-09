@@ -8,9 +8,9 @@ class Room:
 
 	# wall directions
 	NORTH       = 0
-	EAST        = 1
+	WEST        = 1
 	SOUTH       = 2
-	WEST        = 3
+	EAST        = 3
 
 	# possible walls:
 	WALL        = 1

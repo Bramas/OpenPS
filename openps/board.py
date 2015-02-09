@@ -71,6 +71,7 @@ class Board:
 
 		if len(self.room_preview_positions) == 0:
 			ops.debug("no preview for this room")
+			
 
 	def turn_preview_card(self):
 		if not self.room_preview:
