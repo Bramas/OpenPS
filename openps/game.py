@@ -90,24 +90,24 @@ class _Game:
 		
 		rooms_distribution = {
 			Room.RUN          : [
-				(Room.WALL, Room.WALL, Room.WALL, Room.WALL),
-				(Room.WALL, Room.WALL, Room.WALL, Room.WALL),
-				(Room.WALL, Room.WALL, Room.WALL, Room.WALL)],
+				(Room.CLOSED_DOOR, Room.OPEN, Room.WALL, Room.WALL),
+				(Room.OPEN, Room.OPEN, Room.OPEN, Room.OPEN),
+				(Room.OPEN, Room.OPEN, Room.OPEN, Room.OPEN)],
 			Room.TEAM         : [
-				(Room.WALL, Room.OPEN, Room.OPEN, Room.WALL),
-				(Room.OPEN, Room.OPEN, Room.WALL, Room.CLOSED_DOOR),
-				(Room.OPEN, Room.WALL, Room.WALL, Room.OPEN),
+				(Room.WALL, Room.WALL, Room.OPEN, Room.OPEN),
+				(Room.OPEN, Room.CLOSED_DOOR, Room.WALL, Room.OPEN),
+				(Room.OPEN, Room.OPEN, Room.WALL, Room.WALL),
 				(Room.CLOSED_DOOR, Room.WALL, Room.OPEN, Room.WALL)],
 			Room.PARASITE     : [
 				(Room.OPEN, Room.OPEN, Room.WALL, Room.OPEN),
-				(Room.OPEN, Room.OPEN, Room.OPEN, Room.WALL),
-				(Room.WALL, Room.OPEN, Room.OPEN, Room.WALL),
+				(Room.OPEN, Room.WALL, Room.OPEN, Room.OPEN),
+				(Room.WALL, Room.WALL, Room.OPEN, Room.OPEN),
 				(Room.WALL, Room.OPEN, Room.OPEN, Room.OPEN)],
 			Room.EMPTY        : [
 				(Room.OPEN, Room.OPEN, Room.WALL, Room.OPEN),
-				(Room.OPEN, Room.OPEN, Room.CLOSED_DOOR, Room.CLOSED_DOOR)],
+				(Room.OPEN, Room.CLOSED_DOOR, Room.CLOSED_DOOR, Room.OPEN)],
 			Room.STORAGE      : [
-				(Room.WALL, Room.OPEN, Room.OPEN, Room.WALL),
+				(Room.WALL, Room.WALL, Room.OPEN, Room.OPEN),
 				(Room.OPEN, Room.OPEN, Room.WALL, Room.OPEN)],
 			Room.SICK_BAY     : [
 				(Room.WALL, Room.WALL, Room.OPEN, Room.WALL)],
@@ -116,7 +116,7 @@ class _Game:
 		}
 		hive     = Room(Room.HIVE   ,  (Room.WALL, Room.WALL, Room.OPEN, Room.WALL))
 		reactor  = Room(Room.REACTOR,  (Room.OPEN, Room.OPEN, Room.OPEN, Room.OPEN))
-		terminal = Room(Room.TERMINAL, (Room.WALL, Room.WALL, Room.OPEN, Room.WALL))
+		terminal = Room(Room.TERMINAL, (Room.WALL, Room.OPEN, Room.OPEN, Room.OPEN))
 		
 		self.rooms_deck = []
 		for type, l in rooms_distribution.items():
