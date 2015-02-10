@@ -1,5 +1,6 @@
 
 import random
+import pygame, sys
 
 from .room import Room
 from .item import Item
@@ -44,17 +45,18 @@ class _Game:
 		#test actions
 		self.board.move_character(self.players[0].soldier, reactor)
 		self.board.move_character(self.players[0].android, reactor)
-		r = self.draw_room()
-		print(str(r))
-
-		#self.players[0].explore()
-
 
 		self.current_player.play()
 		
 	def update(self, screen):
 		self.board.update(screen)
 		self.players[0].update(screen)
+
+		if not self.board.room_preview:
+			textSurfaceObj = ops.DefaultFont.render("Explorer", True,  (0, 0, 0))
+			textRect = pygame.Rect(100, 50, 130, 50)
+			screen.blit(textSurfaceObj, textRect)
+
 
 	def draw_item(self):
 		if len(self.items_deck) == 0:
@@ -68,16 +70,13 @@ class _Game:
 	def draw_room(self):
 		r=self.rooms_deck.pop()
 		
-		self.board.set_room_preview(r,0,0)
 		# compute possible positions for the preview_room
 
-		for (x,y) in board.rooms:
-			self.board.set_room_preview(r, x, y)
+		self.board.set_room_preview(r)
 			
-
-#		if len(self.board.room_preview_positions) == 0:
+		if len(self.board.room_preview_positions) == 0:
 			#if the room doesn't fit
-#			ops.debug("no preview for this room")
+			ops.debug("no preview for this room")
 
 			#si la room peut se placer autour d'une pièce contenant un personnage du joueur actif, on affiche les possibilités
 				#sinon, s'il existe un autre endroit sur le plan où on peut placer la room, alors :
@@ -99,6 +98,9 @@ class _Game:
 	def on_mouse_press(self, position):
 		self.board.on_mouse_press(position)
 		self.players[0].on_mouse_press(position)
+
+		if not self.board.room_preview and pygame.Rect(100, 50, 130, 50).collidepoint(position):
+			self.draw_room()
 
 
 	def end_turn(self, player):
