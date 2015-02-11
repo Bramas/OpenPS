@@ -134,11 +134,25 @@ class _Game:
 			#si la room peut se placer autour d'une pièce contenant un personnage du joueur actif, on affiche les possibilités
 				#sinon, s'il existe un autre endroit sur le plan où on peut placer la room, alors :
 					#il ne se passe rien, l'action d'exploration échoue.
+					
+			if r.type == Room.HIVE:
+				r.walls = (Room.WALL,Room.OPEN,Room.WALL,Room.WALL)
+				self.board.set_room_preview(r)
+			
 				#s'il n'existe aucun autre endroit où placer la room, alors :
 					#soit il s'agit du Hive, alors :
 						#on affecte chacune de ses ouvertures à la suivante
 						#(North -> West, West -> South, ...)
 						#on modifie son aspect (carré à la place de rectangulaire)
+						
+			else:
+				self.rooms_deck.insert(0,r)
+				r=self.rooms_deck.pop()
+				self.board.set_room_preview(r)
+				if len(self.board.room_preview_positions) == 0:
+					#if the room doesn't fit
+					ops.debug("no preview for this room")
+						
 					#soit il s'agit d'un autre type, dans ce cas :
 						#on met la room sous la pioche
 						#on tente de placer la nouvelle room qui est apparue au sommet de la pioche
