@@ -141,9 +141,7 @@ class _Game:
 			
 				#s'il n'existe aucun autre endroit où placer la room, alors :
 					#soit il s'agit du Hive, alors :
-						#on affecte chacune de ses ouvertures à la suivante
-						#(North -> West, West -> South, ...)
-						#on modifie son aspect (carré à la place de rectangulaire)
+						#on tourne les ouvertures
 						
 			else:
 				self.rooms_deck.insert(0,r)
