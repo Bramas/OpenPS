@@ -9,11 +9,63 @@ from . import ia
 from . import board
 from . import glb as ops
 
+import legume
+from time import sleep
+import time
+
+PORT = 29050
+
+class ServerMessage(legume.messages.BaseMessage):
+	STATE_INITIATED=127
+	STATE_READY=128
+	MessageTypeID = legume.messages.BASE_MESSAGETYPEID_USER+1
+	MessageValues = {
+		'state' : 'int',
+		'player_id' : 'int'}
+
+
+legume.messages.message_factory.add(ServerMessage)
+
 class _Game:
+	def message_handler(self, sender, args):
+		if legume.messages.message_factory.is_a(args, 'ServerMessage'):
+			m = ServerMessage()
+			m.state.value=ServerMessage.STATE_READY
+			self.client.send_reliable_message(m)
+
+			#print("player id: "+str(args.player_id.value)+" state: "+str(args.state.value))
+			self.current_player_id = args.player_id.value
+		else:
+			print('Message: %s' % args)
+
 
 	def __init__(self, nb_players):
 		#deterministic randomness:
 		#random.seed()
+
+		print('Connecting to server...')
+		t = time.time()
+		self.client = legume.Client()
+		self.client.OnMessage += self.message_handler
+		self.client.connect(('localhost', PORT))
+		while self.client.state != self.client.ERRORED:
+			self.client.update()
+			if (self.client.state == self.client.CONNECTED):
+				print('Connected to server')
+				break
+			time.sleep(0.0001)
+		if (self.client.state == self.client.ERRORED):
+			print('Connection Error')
+			sys.exit()
+
+		print('Waiting Player Id')
+		self.current_player_id = None
+		while self.current_player_id == None:
+			self.client.update()
+			time.sleep(0.0001)
+
+		print('Player Id = '+str(self.current_player_id))
+		print('Start Game')
 		
 		self.nb_players = nb_players
 
@@ -49,6 +101,7 @@ class _Game:
 		self.current_player.play()
 		
 	def update(self, screen):
+		self.client.update()
 		self.board.update(screen)
 		self.players[0].update(screen)
 
