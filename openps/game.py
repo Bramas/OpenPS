@@ -1,5 +1,6 @@
 # -*- coding:utf8 -*-
 import random
+import pygame, sys
 
 from .room import Room
 from .item import Item
@@ -8,11 +9,63 @@ from . import ia
 from . import board
 from . import glb as ops
 
+import legume
+from time import sleep
+import time
+
+PORT = 29050
+
+class ServerMessage(legume.messages.BaseMessage):
+	STATE_INITIATED=127
+	STATE_READY=128
+	MessageTypeID = legume.messages.BASE_MESSAGETYPEID_USER+1
+	MessageValues = {
+		'state' : 'int',
+		'player_id' : 'int'}
+
+
+legume.messages.message_factory.add(ServerMessage)
+
 class _Game:
+	def message_handler(self, sender, args):
+		if legume.messages.message_factory.is_a(args, 'ServerMessage'):
+			m = ServerMessage()
+			m.state.value=ServerMessage.STATE_READY
+			self.client.send_reliable_message(m)
+
+			#print("player id: "+str(args.player_id.value)+" state: "+str(args.state.value))
+			self.current_player_id = args.player_id.value
+		else:
+			print('Message: %s' % args)
+
 
 	def __init__(self, nb_players):
 		#deterministic randomness:
 		#random.seed()
+
+		print('Connecting to server...')
+		t = time.time()
+		self.client = legume.Client()
+		self.client.OnMessage += self.message_handler
+		self.client.connect(('localhost', PORT))
+		while self.client.state != self.client.ERRORED:
+			self.client.update()
+			if (self.client.state == self.client.CONNECTED):
+				print('Connected to server')
+				break
+			time.sleep(0.0001)
+		if (self.client.state == self.client.ERRORED):
+			print('Connection Error')
+			sys.exit()
+
+		print('Waiting Player Id')
+		self.current_player_id = None
+		while self.current_player_id == None:
+			self.client.update()
+			time.sleep(0.0001)
+
+		print('Player Id = '+str(self.current_player_id))
+		print('Start Game')
 		
 		self.nb_players = nb_players
 
@@ -44,17 +97,19 @@ class _Game:
 		#test actions
 		self.board.move_character(self.players[0].soldier, reactor)
 		self.board.move_character(self.players[0].android, reactor)
-		r = self.draw_room()
-		print(str(r))
-
-		#self.players[0].explore()
-
 
 		self.current_player.play()
 		
 	def update(self, screen):
+		self.client.update()
 		self.board.update(screen)
 		self.players[0].update(screen)
+
+		if not self.board.room_preview:
+			textSurfaceObj = ops.DefaultFont.render("Explorer", True,  (0, 0, 0))
+			textRect = pygame.Rect(100, 50, 130, 50)
+			screen.blit(textSurfaceObj, textRect)
+
 
 	def draw_item(self):
 		if len(self.items_deck) == 0:
@@ -68,24 +123,38 @@ class _Game:
 	def draw_room(self):
 		r=self.rooms_deck.pop()
 		
-		self.board.set_room_preview(r)
 		# compute possible positions for the preview_room
 
+		self.board.set_room_preview(r)
+			
 		if len(self.board.room_preview_positions) == 0:
 			#if the room doesn't fit
 			ops.debug("no preview for this room")
 
-			#s'il existe un autre endroit sur le plan où on peut placer la room, alors :
-				#il ne se passe rien, l'action d'exploration échoue.
-			#s'il n'existe aucun autre endroit où placer la room, alors :
-				#soit il s'agit du Hive, alors :
-					#on affecte chacune de ses ouvertures à la suivante
-					#(North -> West, West -> South, ...)
-					#on modifie son aspect (carré à la place de rectangulaire)
-				#soit il s'agit d'un autre type, dans ce cas :
-					#on met la room sous la pioche
-					#on tente de placer la nouvelle room qui est apparue au sommet de la pioche
-					#soit on arrive à la placer, soit non, mais on ne fait pas d'autre vérification
+			#si la room peut se placer autour d'une pièce contenant un personnage du joueur actif, on affiche les possibilités
+				#sinon, s'il existe un autre endroit sur le plan où on peut placer la room, alors :
+					#il ne se passe rien, l'action d'exploration échoue.
+					
+			if r.type == Room.HIVE:
+				r.walls = (Room.WALL,Room.OPEN,Room.WALL,Room.WALL)
+				self.board.set_room_preview(r)
+			
+				#s'il n'existe aucun autre endroit où placer la room, alors :
+					#soit il s'agit du Hive, alors :
+						#on tourne les ouvertures
+						
+			else:
+				self.rooms_deck.insert(0,r)
+				r=self.rooms_deck.pop()
+				self.board.set_room_preview(r)
+				if len(self.board.room_preview_positions) == 0:
+					#if the room doesn't fit
+					ops.debug("no preview for this room")
+						
+					#soit il s'agit d'un autre type, dans ce cas :
+						#on met la room sous la pioche
+						#on tente de placer la nouvelle room qui est apparue au sommet de la pioche
+						#soit on arrive à la placer, soit non, mais on ne fait pas d'autre vérification
 
 
 	def discard(self, card):
@@ -94,6 +163,9 @@ class _Game:
 	def on_mouse_press(self, position):
 		self.board.on_mouse_press(position)
 		self.players[0].on_mouse_press(position)
+
+		if not self.board.room_preview and pygame.Rect(100, 50, 130, 50).collidepoint(position):
+			self.draw_room()
 
 
 	def end_turn(self, player):

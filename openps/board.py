@@ -42,6 +42,45 @@ class Board:
 				self.room_preview.update(screen, (-2,-1))
 
 
+	def __can_place_room(self, r, x, y):
+
+		# if there is a room at (x,y) we cannot place the room
+		if (x, y) in self.rooms:
+			return False
+
+		# otherwise we have to check for every adjacent room if it is coherent
+		# (and there must be at least one adjacent room)
+		is_there_at_least_one_room = False
+		if (x-1, y) in self.rooms:
+			is_there_at_least_one_room = True
+			if not r.explorable(Room.WEST) \
+				or not self.rooms[(x-1, y)].explorable(Room.EAST) \
+				or (r.walls[Room.WEST] in [Room.CLOSED_DOOR,Room.OPENED_DOOR] \
+					and self.rooms[(x-1, y)].walls[Room.EAST] in [Room.CLOSED_DOOR,Room.OPENED_DOOR] ):
+				#deux portes blindées ne peuvent être adjacentes
+				return False
+		if (x+1, y) in self.rooms:
+			is_there_at_least_one_room = True
+			if not r.explorable(Room.EAST) \
+				or not self.rooms[(x+1, y)].explorable(Room.WEST) \
+				or (r.walls[Room.EAST] in [Room.CLOSED_DOOR,Room.OPENED_DOOR] \
+					and self.rooms[(x+1, y)].walls[Room.WEST] in [Room.CLOSED_DOOR,Room.OPENED_DOOR] ):
+				return False
+		if (x, y-1) in self.rooms:
+			is_there_at_least_one_room = True
+			if not r.explorable(Room.NORTH) \
+				or not self.rooms[(x, y-1)].explorable(Room.SOUTH) \
+				or (r.walls[Room.NORTH] in [Room.CLOSED_DOOR,Room.OPENED_DOOR] \
+					and self.rooms[(x, y-1)].walls[Room.SOUTH] in [Room.CLOSED_DOOR,Room.OPENED_DOOR] ):
+				return False
+		if (x, y+1) in self.rooms:
+			is_there_at_least_one_room = True
+			if not r.explorable(Room.SOUTH) \
+				or not self.rooms[(x, y+1)].explorable(Room.NORTH) \
+				or (r.walls[Room.SOUTH] in [Room.CLOSED_DOOR,Room.OPENED_DOOR] \
+					and self.rooms[(x, y+1)].walls[Room.NORTH] in [Room.CLOSED_DOOR,Room.OPENED_DOOR] ):
+				return False
+		return is_there_at_least_one_room
 
 	def set_room_preview(self, preview_room):
 		self.room_preview = preview_room
@@ -51,26 +90,12 @@ class Board:
 			ops.debug(str(self.room_preview.walls))
 
 		# compute possible positions for the preview_room
-		for (x,y) in self.rooms:
-			if not (x-1, y) in self.rooms:
-				if preview_room.walkable(Room.EAST) \
-					and self.rooms[(x, y)].walkable(Room.WEST):
-					self.room_preview_positions.append((x-1, y))
-			if not (x+1, y) in self.rooms:
-				if preview_room.walkable(Room.WEST) \
-					and self.rooms[(x, y)].walkable(Room.EAST):
-					self.room_preview_positions.append((x+1, y))
-			if not (x, y-1) in self.rooms:
-				if preview_room.walkable(Room.SOUTH) \
-					and self.rooms[(x, y)].walkable(Room.NORTH):
-					self.room_preview_positions.append((x, y-1))
-			if not (x, y+1) in self.rooms:
-				if preview_room.walkable(Room.NORTH) \
-					and self.rooms[(x, y)].walkable(Room.SOUTH):
-					self.room_preview_positions.append((x, y+1))
+		for x in range(-20,21):
+			for y in range(-20,21):
+				if self.__can_place_room(self.room_preview, x, y):
+					self.room_preview_positions.append((x, y))
+			
 
-		if len(self.room_preview_positions) == 0:
-			ops.debug("no preview for this room")
 			
 
 	def turn_preview_card(self):

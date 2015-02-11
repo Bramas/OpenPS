@@ -3,13 +3,14 @@ from pygame.locals import *
 from . import glb as ops
 from . import game
 
+
 #from openps import openps as ops
 
 def run():
+	game.Game(4)
 	DISPLAYSURF = pygame.display.set_mode((1024, 780))
 	pygame.display.set_caption('OpenPS')
 
-	game.Game(4)
 
 	while True: # main game loop
 		for event in pygame.event.get():

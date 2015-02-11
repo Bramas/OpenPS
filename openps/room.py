@@ -86,6 +86,10 @@ class Room:
 			character.update(screen, (x,y))
 			y += 35
 
+	def explorable(self,direction):
+		return self.walls[direction] == Room.OPEN or self.walls[direction] == Room.OPENED_DOOR or self.walls[direction] == Room.CLOSED_DOOR
+		#on peut voir à travers une porte fermée, mais on ne peut pas la franchir
+
 	def walkable(self, direction):
 		return self.walls[direction] == Room.OPEN or self.walls[direction] == Room.OPENED_DOOR
 
