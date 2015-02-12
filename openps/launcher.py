@@ -10,7 +10,7 @@ currentScene = None
 
 def run():
 	currentScene = GameLauncher()
-	DISPLAYSURF = pygame.display.set_mode((1024, 780))
+	DISPLAYSURF = pygame.display.set_mode((1280, 780))
 	pygame.display.set_caption('OpenPS')
 
 	while True: # main game loop

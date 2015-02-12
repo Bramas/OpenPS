@@ -75,35 +75,77 @@ class _Game:
 		# compute possible positions for the preview_room
 
 		self.board.set_room_preview(r)
+		#si la room peut se placer autour d'une pièce contenant un personnage du joueur actif, on affiche les possibilités
+		
+		#sinon, s'il existe un autre endroit sur le plan où on peut placer la room, alors :
+			#il ne se passe rien, l'action d'exploration échoue.
 			
-		if len(self.board.room_preview_positions) == 0:
-			#if the room doesn't fit
+		if len(self.board.room_preview_positions) == 0 \
+			and turn_preview_card() \
+			and len(self.board.room_preview_positions) == 0 :
+				
+			#if the room doesn't fit anywhere
+			
 			ops.debug("no preview for this room")
 
-			#si la room peut se placer autour d'une pièce contenant un personnage du joueur actif, on affiche les possibilités
-				#sinon, s'il existe un autre endroit sur le plan où on peut placer la room, alors :
-					#il ne se passe rien, l'action d'exploration échoue.
-					
-			if r.type == Room.HIVE:
-				r.walls = (Room.WALL,Room.OPEN,Room.WALL,Room.WALL)
-				self.board.set_room_preview(r)
-			
-				#s'il n'existe aucun autre endroit où placer la room, alors :
-					#soit il s'agit du Hive, alors :
-						#on tourne les ouvertures
-						
-			else:
+			if self.players[0].failed_explore == True :
+				#if the player has already failed or used this possibility
+				ops.debug("already failed exploration")
+
+			elif not r.type == Room.HIVE :
+				#put the impossible room at the end of the deck
+				#and try to set the next room around his characters
+				
+				self.players[0].failed_explore = True
 				self.rooms_deck.insert(0,r)
 				r=self.rooms_deck.pop()
 				self.board.set_room_preview(r)
-				if len(self.board.room_preview_positions) == 0:
-					#if the room doesn't fit
-					ops.debug("no preview for this room")
+				
+				if len(self.board.room_preview_positions) == 0 \
+					and turn_preview_card() \
+					and len(self.board.room_preview_positions) == 0 :
 						
-					#soit il s'agit d'un autre type, dans ce cas :
-						#on met la room sous la pioche
-						#on tente de placer la nouvelle room qui est apparue au sommet de la pioche
-						#soit on arrive à la placer, soit non, mais on ne fait pas d'autre vérification
+					#if the room doesn't fit
+					
+					ops.debug("no preview for this room - exploration failed")
+					self.rooms_deck.append(r)
+					
+			else :
+				#if it is the Hive, the room is turned 90°
+				
+				r.walls = (Room.WALL,Room.OPEN,Room.WALL,Room.WALL)
+				self.board.set_room_preview(r)
+				
+				if len(self.board.room_preview_positions) == 0 \
+					and turn_preview_card() \
+					and len(self.board.room_preview_positions) == 0 :
+						
+					#if the Hive doesn't fit anywhere
+					
+					if len(self.rooms_deck) == 1 :
+						#if it is the last room in the deck
+						
+						ops.debug("game over")
+						
+					else :
+						#if there is at least one other room in the deck,
+						#try to set the room after the Hive
+						
+						r_prime=self.rooms_reck.pop()
+						self.board.set_room_preview(r_prime)
+						
+						if len(self.board.room_preview_positions) == 0 \
+							and turn_preview_card() \
+							and len(self.board.room_preview_positions) == 0 :
+							
+							ops.debug("no preview for this room - exploration failed")
+							self.rooms_deck.append(r_prime)
+						
+						self.rooms_deck.append(r)
+						
+						
+
+
 
 
 	def discard(self, card):
