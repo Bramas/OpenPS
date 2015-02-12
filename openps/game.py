@@ -9,64 +9,14 @@ from . import ia
 from . import board
 from . import glb as ops
 
-import legume
-from time import sleep
-import time
-
-PORT = 29050
-
-class ServerMessage(legume.messages.BaseMessage):
-	STATE_INITIATED=127
-	STATE_READY=128
-	MessageTypeID = legume.messages.BASE_MESSAGETYPEID_USER+1
-	MessageValues = {
-		'state' : 'int',
-		'player_id' : 'int'}
-
-
-legume.messages.message_factory.add(ServerMessage)
 
 class _Game:
-	def message_handler(self, sender, args):
-		if legume.messages.message_factory.is_a(args, 'ServerMessage'):
-			m = ServerMessage()
-			m.state.value=ServerMessage.STATE_READY
-			self.client.send_reliable_message(m)
 
-			#print("player id: "+str(args.player_id.value)+" state: "+str(args.state.value))
-			self.current_player_id = args.player_id.value
-		else:
-			print('Message: %s' % args)
-
-
-	def __init__(self, nb_players):
+	def __init__(self, nb_players, current_player_id):
 		#deterministic randomness:
 		#random.seed()
-
-		print('Connecting to server...')
-		t = time.time()
-		self.client = legume.Client()
-		self.client.OnMessage += self.message_handler
-		self.client.connect(('localhost', PORT))
-		while self.client.state != self.client.ERRORED:
-			self.client.update()
-			if (self.client.state == self.client.CONNECTED):
-				print('Connected to server')
-				break
-			time.sleep(0.0001)
-		if (self.client.state == self.client.ERRORED):
-			print('Connection Error')
-			sys.exit()
-
-		print('Waiting Player Id')
-		self.current_player_id = None
-		while self.current_player_id == None:
-			self.client.update()
-			time.sleep(0.0001)
-
-		print('Player Id = '+str(self.current_player_id))
-		print('Start Game')
-		
+		self.nextScene = None
+		self.current_player_id = current_player_id
 		self.nb_players = nb_players
 
 		#create decks
@@ -74,14 +24,14 @@ class _Game:
 		self.create_items_deck()
 
 		#create the players
-		playerId = 0
 		self.players = []
-		self.players.append(player.Player(self, playerId))
 		for i in range(nb_players - 1):
-			playerId += 1
-			self.players.append(ia.IA(self, playerId))
+			if i == self.current_player_id:
+				self.players.append(player.Player(self, i))
+			else:
+				self.players.append(ia.IA(self, i))
 
-		self.current_player = self.players[0]
+		self.current_player = self.players[current_player_id]
 
 		self.board = board.Board();
 
@@ -95,13 +45,12 @@ class _Game:
 
 
 		#test actions
-		self.board.move_character(self.players[0].soldier, reactor)
-		self.board.move_character(self.players[0].android, reactor)
+		self.board.move_character(self.current_player.soldier, reactor)
+		self.board.move_character(self.current_player.android, reactor)
 
 		self.current_player.play()
 		
 	def update(self, screen):
-		self.client.update()
 		self.board.update(screen)
 		self.players[0].update(screen)
 
@@ -262,12 +211,12 @@ class _Game:
 
 class _GameInstance:
 	instance = None
-	def __init__(self, nb_players):
+	def __init__(self, nb_players, current_player_id):
 		if not _GameInstance.instance:
-			_GameInstance.instance = _Game(nb_players)
+			_GameInstance.instance = _Game(nb_players, current_player_id)
 
 
 
-def Game(nb_players = None):
-	_GameInstance(nb_players)
+def Game(nb_players = None, current_player_id = None):
+	_GameInstance(nb_players, current_player_id)
 	return _GameInstance.instance
