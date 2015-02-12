@@ -158,11 +158,11 @@ class _Game:
 
 	def end_turn(self, player):
 		if player == self.current_player:
-			glb.debug('player %d ended the turn', self.current_player.id)
+			ops.debug('player %d ended the turn', self.current_player.id)
 			self.current_player = self.players[(self.current_player.id + 1)%self.nb_players]
 			self.current_player.play()
 		else:
-			glb.debug('wrong player ended the turn')
+			ops.debug('wrong player ended the turn')
 
 	#construction of the deck of rooms
 	def create_rooms_deck(self):
