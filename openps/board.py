@@ -38,8 +38,6 @@ class Board:
 			textSurfaceObj = self.font.render("Retourner", True,  (0, 0, 0))
 			textRect = pygame.Rect(100, 100, 130, 50)
 			screen.blit(textSurfaceObj, textRect)
-			if self.room_preview and len(self.room_preview_positions) == 0:
-				self.room_preview.update(screen, (-2,-1))
 
 
 	def __can_place_room(self, r, x, y):
@@ -94,13 +92,14 @@ class Board:
 			for y in range(-20,21):
 				if self.__can_place_room(self.room_preview, x, y):
 					self.room_preview_positions.append((x, y))
-			
+		
+		ops.debug(str(len(self.room_preview_positions))+' room preview')
 
 			
 
 	def turn_preview_card(self):
 		if not self.room_preview:
-			return
+			return False
 
 		self.room_preview = Room(self.room_preview.type, (
 			self.room_preview.walls[2],
@@ -108,6 +107,7 @@ class Board:
 			self.room_preview.walls[0],
 			self.room_preview.walls[1]))
 		self.set_room_preview(self.room_preview)
+		return len(self.room_preview_positions) > 0
 
 	def discover_room(self, position):
 		if not self.room_preview:

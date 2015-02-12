@@ -70,6 +70,8 @@ class _Game:
 		return self.items_deck.pop()
 		
 	def draw_room(self):
+		if len(self.rooms_deck) == 0:
+			ops.debug("no room to draw")
 		r=self.rooms_deck.pop()
 		
 		# compute possible positions for the preview_room
@@ -81,67 +83,42 @@ class _Game:
 			#il ne se passe rien, l'action d'exploration échoue.
 			
 		if len(self.board.room_preview_positions) == 0 \
-			and turn_preview_card() \
-			and len(self.board.room_preview_positions) == 0 :
+			and not self.board.turn_preview_card():
 				
 			#if the room doesn't fit anywhere
 			
 			ops.debug("no preview for this room")
 
-			if self.players[0].failed_explore == True :
-				#if the player has already failed or used this possibility
-				ops.debug("already failed exploration")
 
-			elif not r.type == Room.HIVE :
-				#put the impossible room at the end of the deck
-				#and try to set the next room around his characters
-				
-				self.players[0].failed_explore = True
-				self.rooms_deck.insert(0,r)
-				r=self.rooms_deck.pop()
-				self.board.set_room_preview(r)
-				
-				if len(self.board.room_preview_positions) == 0 \
-					and turn_preview_card() \
-					and len(self.board.room_preview_positions) == 0 :
-						
-					#if the room doesn't fit
-					
-					ops.debug("no preview for this room - exploration failed")
-					self.rooms_deck.append(r)
-					
-			else :
+			if  r.type == Room.HIVE :
 				#if it is the Hive, the room is turned 90°
-				
 				r.walls = (Room.WALL,Room.OPEN,Room.WALL,Room.WALL)
 				self.board.set_room_preview(r)
 				
 				if len(self.board.room_preview_positions) == 0 \
-					and turn_preview_card() \
-					and len(self.board.room_preview_positions) == 0 :
-						
+					and not self.board.turn_preview_card():
 					#if the Hive doesn't fit anywhere
 					
-					if len(self.rooms_deck) == 1 :
+					if len(self.rooms_deck) == 0 :
 						#if it is the last room in the deck
-						
 						ops.debug("game over")
-						
 					else :
 						#if there is at least one other room in the deck,
 						#try to set the room after the Hive
-						
-						r_prime=self.rooms_reck.pop()
-						self.board.set_room_preview(r_prime)
-						
-						if len(self.board.room_preview_positions) == 0 \
-							and turn_preview_card() \
-							and len(self.board.room_preview_positions) == 0 :
-							
-							ops.debug("no preview for this room - exploration failed")
-							self.rooms_deck.append(r_prime)
-						
-						self.rooms_deck.append(r)
+						self.rooms_deck.insert(len(self.rooms_deck) - 1,r)
+						return self.draw_room()
+			elif self.current_player.failed_explore == True :
+				#if the player has already failed or used this possibility
+				ops.debug("already failed exploration")
+				self.board.room_preview = None
+
+			else:
+				#put the impossible room at the end of the deck
+				#and try to set the next room around his characters
+				self.current_player.failed_explore = True
+				self.rooms_deck.insert(0,r)
+				return self.draw_room()
+
 						
 						
 
