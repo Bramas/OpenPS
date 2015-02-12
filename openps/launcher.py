@@ -8,7 +8,7 @@ from . import game
 
 def run():
 	game.Game(4)
-	DISPLAYSURF = pygame.display.set_mode((1024, 780))
+	DISPLAYSURF = pygame.display.set_mode((1280, 780))
 	pygame.display.set_caption('OpenPS')
 
 

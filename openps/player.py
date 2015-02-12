@@ -20,6 +20,7 @@ class Player:
 		self.hand          = [game.draw_item()         for i in range(2)] # draw two cards
 		self.is_playing	   = False
 		self.play_mutex    = threading.Semaphore()
+		self.failed_explore= False
 		
 		#tant qu'un parasite est dans la main de départ, on le défausse, on place un parasite et on tire une autre carte
 		
