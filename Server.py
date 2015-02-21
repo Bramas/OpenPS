@@ -1,26 +1,72 @@
 import legume
 import time
+from openps.shared.message import ServerMessage
+from openps.shared.message import ServerCommand
 
 PORT = 29050
 
-class ServerMessage(legume.messages.BaseMessage):
-	STATE_INITIATED=127
-	STATE_READY=128
-	MessageTypeID = legume.messages.BASE_MESSAGETYPEID_USER+1
-	MessageValues = {
-		'state' : 'int',
-		'player_id' : 'int'}
 
 
-legume.messages.message_factory.add(ServerMessage)
 
 
 peersState = {}
+rooms = []
+
+
+class ServerRoom:
+	def __init__(self):
+		self.peers = []
+
+
+def update_peer(peer):
+	peer.send_reliable_message(peersState[peer.address])
+
+def hello(peer):
+	m = ServerMessage()
+	m.state.value = ServerMessage.WHAT_DO_YOU_WANT
+	peersState[peer.address] = m
+	update_peer(peer)
+
+def create_room(peer):
+	r = ServerRoom()
+	r.peers.append(peer)
+	peersState[peer.address].room_id.value = len(rooms)
+	peersState[peer.address].state.value = ServerMessage.IN_ROOM
+	peersState[peer.address].player_id.value = 0
+	rooms.append(r)
+	update_peer(peer)
+
+def find_room(peer):
+	if len(rooms) == 0:
+		peersState[peer.address].state.value = ServerMessage.NOPE
+	else:
+		peersState[peer.address].state.value = ServerMessage.IN_ROOM
+		peersState[peer.address].room_id.value = 0
+		peersState[peer.address].player_id.value = len(rooms[0].peers)
+		rooms[0].peers.append(peer)
+	update_peer(peer)
+
+def start_game(peer):
+	print(str(peer.address)+" start game")
+	print("room id: "+str(peersState[peer.address].room_id.value))
+	for p in rooms[peersState[peer.address].room_id.value].peers:
+		peersState[p.address].state.value = ServerMessage.IN_GAME
+		print(str(p.address)+" in game")
+		update_peer(p)
+
 
 def message_handler(sender, message):
 	if message.MessageTypeID == ServerMessage.MessageTypeID:
-		print(str(sender.address))
-		peersState[sender.address].state.value = ServerMessage.STATE_READY
+		print("message from "+str(sender.address))
+	elif message.MessageTypeID == ServerCommand.MessageTypeID:
+		print("command "+str(message.command.value)+" from "+str(sender.address))
+		if message.command.value == ServerCommand.CREATE_ROOM:
+			create_room(sender)
+		elif message.command.value == ServerCommand.FIND_ROOM:
+			find_room(sender)
+		elif message.command.value == ServerCommand.START_GAME:
+			start_game(sender)
+
 
 def main():
 	s = legume.Server()
@@ -47,16 +93,9 @@ def main():
 			for peer in s.peers:
 				#print(str(peer.address)+" "+str(peer.latency))
 				if not peer.address in peersState:
-					m = ServerMessage()
-					m.state.value = ServerMessage.STATE_INITIATED
-					m.player_id.value = player_counter
-					player_counter += 1
-					peersState[peer.address] = m
-					print("New Connexion: "+str(peer.address)+" player_id: "+str(m.player_id.value))
-				if peersState[peer.address].state.value == ServerMessage.STATE_INITIATED and len(s.peers) == 2:
-					peer.send_reliable_message(peersState[peer.address])
-					#print("sending to "+str(peer.address)+" state: "+str(peersState[peer.address].state.value)+" player_id: "+str(peersState[peer.address].player_id.value))
-
+					print("New Connexion: "+str(peer.address))
+					hello(peer)
+					
 		time.sleep(0.001)
 
 if __name__ == '__main__':
