@@ -12,39 +12,34 @@ from . import glb as ops
 
 class _Game:
 
-	def __init__(self, nb_players, current_player_id):
-		#deterministic randomness:
-		#random.seed()
+	def __init__(self, players):
 		self.nextScene = None
-		self.current_player_id = current_player_id
-		self.nb_players = nb_players
+		self.players = players
+		self.nb_players = len(self.players)
 
 		#create decks
 		self.create_rooms_deck()
+		ops.debug("rooms:")
+		ops.debug(str(self.rooms_deck))
 		self.create_items_deck()
+		ops.debug("items:")
+		ops.debug(str(self.items_deck))
 
-		#create the players
-		self.players = []
-		for i in range(nb_players - 1):
-			if i == self.current_player_id:
-				self.players.append(player.Player(self, i))
-			else:
-				self.players.append(ia.IA(self, i))
-
-		self.current_player = self.players[current_player_id]
 
 		self.board = board.Board();
 
 		reactor = self.rooms_deck.pop()
 		self.board.place_room(reactor, (0,0))
 
-		ops.debug("Game created with %d players", nb_players)
+		ops.debug("Game created with %d players", self.nb_players)
 
 
+		for player in self.players:
+			player.on_game_init(self)
 
 
-
-		#test actions
+		self.current_player = self.players[0]
+		self.current_player_id = 0
 		self.board.move_character(self.current_player.soldier, reactor)
 		self.board.move_character(self.current_player.android, reactor)
 
@@ -180,7 +175,7 @@ class _Game:
 		terminal = Room(Room.TERMINAL, (Room.WALL, Room.OPEN, Room.OPEN, Room.OPEN))
 		
 		self.rooms_deck = []
-		for type, l in rooms_distribution.items():
+		for type, l in sorted(rooms_distribution.items()):
 			for wall in l:
 				self.rooms_deck.append(Room(type, wall))
 		random.shuffle(self.rooms_deck)
@@ -210,7 +205,7 @@ class _Game:
 			Item.SCANNER    :1
 		}
 		base_deck = []
-		for item, count in base_item_distribution.items():
+		for item, count in sorted(base_item_distribution.items()):
 			base_deck += [Item(item) for i in range(count)]
 		top_deck = [Item(Item.HOST)]
 
@@ -230,12 +225,12 @@ class _Game:
 
 class _GameInstance:
 	instance = None
-	def __init__(self, nb_players, current_player_id):
+	def __init__(self, players):
 		if not _GameInstance.instance:
-			_GameInstance.instance = _Game(nb_players, current_player_id)
+			_GameInstance.instance = _Game(players)
 
 
 
-def Game(nb_players = None, current_player_id = None):
-	_GameInstance(nb_players, current_player_id)
+def Game(players = None):
+	_GameInstance(players)
 	return _GameInstance.instance

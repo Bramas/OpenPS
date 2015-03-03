@@ -11,6 +11,7 @@ from time import sleep
 import time
 from .shared.message import ServerMessage
 from .shared.message import ServerCommand
+from . import player
 
 PORT = 29050
 
@@ -51,13 +52,25 @@ class GameLauncher:
 
 		print('State = '+str(self.server_message.state.value))
 
+	def start_game(self):
+		#deterministic randomness:
+		random.seed(self.server_message.seed.value)
+		ops.debug("Creating game with seed="+str(self.server_message.seed.value))
 
+		players = []
+		for i in range(2):
+			if i == self.server_message.player_id.value:
+				players.append(player.LocalPlayer(i, self.client))
+			else:
+				players.append(player.DistantPlayer(i, self.client))
+				#players.append(ia.IA(self, i))
+		self.nextScene = Game(players)
 
 	def update(self, screen):
 		self.client.update()
 
 		if self.server_message.state.value == ServerMessage.IN_GAME:
-			self.nextScene = Game(4, self.server_message.player_id.value)
+			self.start_game()
 
 		if self.server_message.state.value == ServerMessage.IN_ROOM:
 			textSurfaceObj = ops.DefaultFont.render("Start Game", True,  (0, 0, 0))

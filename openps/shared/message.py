@@ -23,6 +23,7 @@ class ServerMessage(legume.messages.BaseMessage):
 	MessageTypeID = legume.messages.BASE_MESSAGETYPEID_USER+2
 	MessageValues = {
 		'state' : 'int',
+		'seed' : 'float',
 		'room_id' : 'int',
 		'player_id' : 'int'}
 

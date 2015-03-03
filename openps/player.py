@@ -8,16 +8,14 @@ import threading
 
 class Player:
 
-	def __init__(self, game, id):
+	def __init__(self, id):
 		
-		self.game          = game
 		self.id            = id
 		self.infection     = False
 		self.action_points = 4
 		self.ammo          = 0
 		self.soldier       = character.Character(self,"Soldier")
 		self.android       = character.Character(self,"Androïd")
-		self.hand          = [game.draw_item()         for i in range(2)] # draw two cards
 		self.is_playing	   = False
 		self.play_mutex    = threading.Semaphore()
 		self.failed_explore= False
@@ -26,10 +24,14 @@ class Player:
 		
 		#si l'Hôte est tiré, self.infection = False
 		
-		self.hand         += [Item(Item.BLOOD, blood_player=id) for i in range(3)] # and take your 3 blood cards
 
-		ops.debug("Player %d:\n - hand: "+str(self.hand), id)
 		self.font = ops.DefaultFont
+
+	def on_game_init(self, game):
+		self.game = game
+		self.hand  = [self.game.draw_item() for i in range(2)] # draw two cards
+		self.hand += [Item(Item.BLOOD, blood_player=self.id) for i in range(3)] # and take your 3 blood cards
+		ops.debug("Player %d:\n - hand: "+str(self.hand), self.id)
 
 	def update(self, screen):
 
@@ -82,7 +84,7 @@ class Player:
 
 	def play(self):
 		self.is_playing	   = True
-		ops.log("player %d plays", self.id)
+		ops.log("player %d plays (%s)", self.id, self.type)
 
 	def activate_terminal(self):
 		ops.log("Player %d activates the terminal", self.id)
@@ -108,3 +110,17 @@ class Player:
 
 	#def skip_turn(self):
 		
+
+class LocalPlayer(Player):
+	def __init__(self, id, client):
+		Player.__init__(self, id)
+		self.client = client
+		self.type	= "local player: You"
+
+
+
+class DistantPlayer(Player):
+	def __init__(self, id, client):
+		Player.__init__(self, id)
+		self.client = client		
+		self.type	= "distant player"
