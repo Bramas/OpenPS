@@ -20,8 +20,6 @@ class GameLauncher:
 	def message_handler(self, sender, args):
 		if legume.messages.message_factory.is_a(args, 'ServerMessage'):
 			self.server_message = args
-		else:
-			print('Message: %s' % args)
 
 	def __init__(self):
 		#deterministic randomness:
@@ -65,14 +63,17 @@ class GameLauncher:
 				players.append(player.DistantPlayer(i, self.client))
 				#players.append(ia.IA(self, i))
 		self.nextScene = Game(players)
+		self.server_message = None
 
 	def update(self, screen):
 		self.client.update()
+		if not self.server_message:
+			return
 
 		if self.server_message.state.value == ServerMessage.IN_GAME:
 			self.start_game()
-
-		if self.server_message.state.value == ServerMessage.IN_ROOM:
+			return
+		elif self.server_message.state.value == ServerMessage.IN_ROOM:
 			textSurfaceObj = ops.DefaultFont.render("Start Game", True,  (0, 0, 0))
 			textRect = pygame.Rect(100, 150, 130, 50)
 			screen.blit(textSurfaceObj, textRect)

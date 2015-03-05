@@ -3,6 +3,7 @@ import time
 import random
 from openps.shared.message import ServerMessage
 from openps.shared.message import ServerCommand
+from openps.shared.message import PlayerMessage
 
 
 
@@ -63,6 +64,11 @@ class Server:
 		print("room id: "+str(self.peersState[peer.address].room_id.value))
 
 		r = self.peersState[peer.address].room_id.value
+
+		if not r in self.rooms:
+			print("Room "+str(r)+" does not exist")
+			return
+
 		self.games[r] = self.rooms[r]
 		del self.rooms[r]
 		seed = random.random()
@@ -75,7 +81,7 @@ class Server:
 
 	def message_handler(self, sender, message):
 		if message.MessageTypeID == ServerMessage.MessageTypeID:
-			print("message from "+str(sender.address))
+			print("ServerMessage from "+str(sender.address))
 		elif message.MessageTypeID == ServerCommand.MessageTypeID:
 			print("command "+str(message.command.value)+" from "+str(sender.address))
 			if message.command.value == ServerCommand.CREATE_ROOM:
@@ -84,6 +90,13 @@ class Server:
 				self.find_room(sender)
 			elif message.command.value == ServerCommand.START_GAME:
 				self.start_game(sender)
+		elif message.MessageTypeID == PlayerMessage.MessageTypeID:
+			print("player command from "+str(sender.address)+" player id="+str(message.player_id.value))
+			if self.peersState[sender.address] and self.peersState[sender.address].state.value == ServerMessage.IN_GAME:
+				if self.peersState[sender.address].room_id.value in self.games:
+					for p in self.games[self.peersState[sender.address].room_id.value].peers:
+						p.send_reliable_message(message)
+			
 
 
 	def run(self):

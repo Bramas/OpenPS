@@ -26,7 +26,7 @@ class _Game:
 		ops.debug(str(self.items_deck))
 
 
-		self.board = board.Board();
+		self.board = board.Board(self);
 
 		reactor = self.rooms_deck.pop()
 		self.board.place_room(reactor, (0,0))
@@ -39,7 +39,6 @@ class _Game:
 
 
 		self.current_player = self.players[0]
-		self.current_player_id = 0
 		self.board.move_character(self.current_player.soldier, reactor)
 		self.board.move_character(self.current_player.android, reactor)
 
@@ -47,12 +46,8 @@ class _Game:
 		
 	def update(self, screen):
 		self.board.update(screen)
-		self.players[0].update(screen)
-
-		if not self.board.room_preview:
-			textSurfaceObj = ops.DefaultFont.render("Explorer", True,  (0, 0, 0))
-			textRect = pygame.Rect(100, 50, 130, 50)
-			screen.blit(textSurfaceObj, textRect)
+		for p in self.players:
+			p.update(screen)
 
 
 	def draw_item(self):
@@ -125,10 +120,8 @@ class _Game:
 
 	def on_mouse_press(self, position):
 		self.board.on_mouse_press(position)
-		self.players[0].on_mouse_press(position)
+		self.current_player.on_mouse_press(position)
 
-		if not self.board.room_preview and pygame.Rect(100, 50, 130, 50).collidepoint(position):
-			self.draw_room()
 
 
 	def end_turn(self, player):

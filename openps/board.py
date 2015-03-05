@@ -7,7 +7,8 @@ from .room import Room
 
 class Board:
 
-	def __init__(self):
+	def __init__(self, game):
+		self.game = game
 		self.rooms = {}
 		self.room_preview = None
 		self.room_preview_positions = []
@@ -109,10 +110,11 @@ class Board:
 		self.set_room_preview(self.room_preview)
 		return len(self.room_preview_positions) > 0
 
-	def discover_room(self, position):
+	def discover_room(self, index):
 		if not self.room_preview:
 			return
 
+		position = self.room_preview_positions[index]
 		self.place_room(self.room_preview, position)
 
 		self.room_preview_positions = []
@@ -122,10 +124,12 @@ class Board:
 		if pygame.Rect(100, 100, 130, 50).collidepoint(position):
 			self.turn_preview_card()
 
+		index = 0
 		for room_position in self.room_preview_positions:
 			x = room_position[0]*100+300
 			y = room_position[1]*150+300
 			if pygame.Rect(x,y,100,150).collidepoint(position):
-				self.discover_room(room_position)
+				self.game.current_player.select_room_preview(index)
 				break
+			index += 1
 		return
